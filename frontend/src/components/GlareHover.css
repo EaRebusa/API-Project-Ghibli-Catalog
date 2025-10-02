@@ -1,0 +1,36 @@
+.glare-hover-wrapper {
+  position: relative;
+  display: block; /* ensures full width/height of child */
+  width: 106%;
+  height: 100%;
+}
+
+.glare-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none; /* allow clicks to pass through */
+  border-radius: inherit; /* follow card corners */
+  background: linear-gradient(
+    var(--gh-angle),
+    hsla(0,0%,100%,0) 50%,
+    var(--gh-rgba) 60%,
+    hsla(0,0%,100%,0) 80%
+  );
+  background-size: var(--gh-size) var(--gh-size), 100% 100%;
+  background-repeat: no-repeat;
+  background-position: -150% -150%, 0 0;
+  transition: background-position var(--gh-duration) ease;
+}
+
+.glare-hover-wrapper:hover .glare-overlay {
+  background-position: 150% 150%, 0 0; /* move the glare across the full card */
+}
+
+.glare-overlay.play-once {
+  transition: none;
+}
+
+.glare-overlay.play-once:hover {
+  transition: background-position var(--gh-duration) ease;
+  background-position: 150% 150%, 0 0;
+}

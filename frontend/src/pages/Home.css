@@ -1,0 +1,81 @@
+.home-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.controls input,
+.controls select {
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.controls input:focus,
+.controls select:focus {
+  border-color: #7b68ee;
+  box-shadow: 0 0 6px rgba(123, 104, 238, 0.3);
+}
+
+.film-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Fade + slide animation for each card */
+.film-card {
+  opacity: 0;
+  transform: translateY(15px);
+  animation: fadeSlideUp 0.5s forwards;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--card-bg);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.film-card:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+@keyframes fadeSlideUp {
+  0% { opacity: 0; transform: translateY(15px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Dark mode */
+.dark .film-card {
+  background-color: #2c2c3e;
+  box-shadow: 0 4px 12px rgba(255,255,255,0.05);
+}
+
+/* loading spinner container */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh; /* vertically centered */
+  min-height: 93vh;
+}
+
+.animated-dropdown {
+  transition: all 0.25s ease;
+}
+
+.animated-dropdown:hover {
+  transform: scale(1.03);
+  border-color: #5A4E9D;
+  box-shadow: 0 0 6px rgba(90, 78, 157, 0.3);
+}

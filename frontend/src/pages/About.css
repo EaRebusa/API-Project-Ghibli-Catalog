@@ -1,0 +1,194 @@
+.about-page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  color: white; /* text visible over video */
+}
+
+/* Background video */
+.about-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0; /* changed from -2 */
+}
+
+.about-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.20); /* dark overlay for readability */
+  z-index: 1; /* changed from -1 */
+}
+
+/* Main container */
+.about-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 87vh; /* ensures container fills most of viewport */
+  opacity: 0;
+  animation: fadeIn 0.6s forwards;
+  position: relative;
+  z-index: 2; /* bumped up so content is above video + overlay */
+  animation-delay: 3s; /* whole container waits 3 seconds */
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Card container */
+.about-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-top: 2rem;
+  background-color: rgba(255, 255, 255, 0.8); /* white with 85% opacity */
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  align-items: flex-start;
+}
+
+
+/* About image */
+.about-image img {
+  width: 400px;
+  max-width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.about-image img:hover {
+  transform: scale(1.03);
+}
+
+/* Dark mode logo inversion */
+.dark .about-image img,
+.dark .modal img {
+  filter: invert(1) brightness(1.2);
+}
+
+/* Responsive: stack vertically only on small screens */
+@media (max-width: 768px) {
+  .about-card {
+    flex-direction: column; /* stacks logo + text */
+    align-items: center;
+  }
+
+  .about-image img {
+    width: 100%;
+  }
+}
+
+.about-text {
+  flex: 1;
+  color: #000000; /* dark text for readability */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-shadow: #000000 0px 0px 1.5px;
+}
+
+.about-text p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+/* Dark mode adjustments */
+.dark .about-card {
+  background-color: rgba(44, 44, 62, 0.85); /* semi-transparent dark */
+  box-shadow: 0 4px 12px rgba(255,255,255,0.05);
+}
+
+
+.dark .about-text p {
+  color: #f0f0f0;
+  text-shadow: #ffffff 0px 0px 1.5px;
+}
+
+/* Loading state */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
+/* History section */
+.about-history {
+  margin-top: 2rem;
+  opacity: 0;
+  animation: fadeIn 0.6s forwards;
+  animation-delay: 3.2s;
+}
+
+.about-history h2, .about-history p {
+  margin-bottom: 0.5rem;
+  text-shadow: #000000 0px 0px 1.5px;
+}
+
+.team-cards {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.team-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 150px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+/* Fun facts section */
+.about-funfacts {
+  margin-top: 2rem;
+  opacity: 0;
+  animation: fadeIn 0.6s forwards;
+  animation-delay: 3.5s;
+}
+
+.about-funfacts h2, .about-funfacts ul {
+  margin-bottom: 0.5rem;
+  text-shadow: #000000 0px 0px 1.5px;
+}
+
+.about-funfacts ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.about-funfacts li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .team-cards {
+    justify-content: center;
+  }
+}
+
+/* Dark mode overlay stronger */
+.dark .about-overlay {
+  background: rgba(0, 0, 0, 0.7);
+}
