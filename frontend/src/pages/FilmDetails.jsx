@@ -12,6 +12,7 @@ export default function FilmDetails() {
   const [films, setFilms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showRomanized, setShowRomanized] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -39,56 +40,86 @@ export default function FilmDetails() {
 
   return (
     <div className="film-details-container" key={film.id}>
-      <div className="film-details-header">
-        <button className="back-button" onClick={() => navigate("/")}>
-          ← Back to Home
-        </button>
-      </div>
+      {/* Backdrop Hero */}
+      <div className="film-backdrop">
+        <div className="film-overlay">
+          <button className="back-button" onClick={() => navigate("/home")}>
+            ← Back to Home
+          </button>
 
-      <div className="film-main">
-        <div className="film-poster">
-          <img
-            src={film.image || "https://placehold.co/400x600?text=No+Poster"}
-            alt={film.title}
-            onClick={() => setIsModalOpen(true)}
-            style={{ cursor: "pointer" }}
-          />
-        </div>
-
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-          <img
-            src={film.image || "https://placehold.co/400x600?text=No+Poster"}
-            alt={film.title}
-            style={{ width: "100%", height: "auto", borderRadius: "10px" }}
-          />
-        </Modal>
-
-        <div className="film-info">
-          <h1>{film.title}</h1>
-          <h3>{film.original_title} ({film.release_date})</h3>
-          <p><strong>Director:</strong> {film.director}</p>
-          <p><strong>Producer:</strong> {film.producer}</p>
-          <p><strong>Score:</strong> {film.rt_score}</p>
-          <p className="description">{film.description}</p>
-
-          {/* Optional trailer/video */}
-          {true && (
-            <div className="film-trailer">
-              <h3>Trailer</h3>
-              <iframe
-                width="100%"
-                height="360"
-                src="https://www.youtube.com/embed/Vqbk9cDX0l0"
-                title="Example Trailer"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
+          <div className="film-hero">
+            {/* Poster with modal */}
+            <div className="film-poster">
+              <img
+                src={film.image || "https://placehold.co/400x600?text=No+Poster"}
+                alt={film.title}
+                onClick={() => setIsModalOpen(true)}
+                style={{ cursor: "pointer" }}
               />
             </div>
-          )}
+
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+              <img
+                src={film.image || "https://placehold.co/400x600?text=No+Poster"}
+                alt={film.title}
+                style={{ width: "100%", height: "auto", borderRadius: "10px" }}
+              />
+            </Modal>
+
+            {/* Info block */}
+            <div className="film-info">
+              <h1>
+                {film.title}{" "}
+                <span className="year">({film.release_date})</span>
+              </h1>
+
+              {/* Crossfade Japanese ↔ Romanized */}
+              <h3
+                className="japanese-title"
+                onMouseEnter={() => setShowRomanized(true)}
+                onMouseLeave={() => setShowRomanized(false)}
+                onClick={() => setShowRomanized((prev) => !prev)}
+              >
+                <span
+                  className={`fade-text ${
+                    showRomanized ? "hidden" : "visible"
+                  }`}
+                >
+                  {film.original_title}
+                </span>
+                <span
+                  className={`fade-text ${
+                    showRomanized ? "visible" : "hidden"
+                  }`}
+                >
+                  {film.original_title_romanised}
+                </span>
+              </h3>
+
+              <p>
+                <strong>Director:</strong> {film.director}
+              </p>
+              <p>
+                <strong>Producer:</strong> {film.producer}
+              </p>
+              <p>
+                <strong>Running Time:</strong> {film.running_time} min
+              </p>
+              <p>
+                <strong>Rotten Tomatoes:</strong> {film.rt_score}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
+      {/* Description */}
+      <div className="film-description">
+        <h2>Synopsis</h2>
+        <p>{film.description}</p>
+      </div>
+
+      {/* Prev/Next nav */}
       <div className="film-nav">
         {prevFilm && (
           <div

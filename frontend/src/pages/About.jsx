@@ -13,6 +13,7 @@ const BG_VIDEO = "/ghibli.mp4";
 export default function About() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [logoSrc, setLogoSrc] = useState(LOGO_SVG);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 500);
@@ -42,18 +43,20 @@ export default function About() {
         <div className="about-card">
           <div className="about-image">
             <img
-              src={LOGO_SVG}
+              src={logoSrc}
               alt="Studio Ghibli"
               onClick={() => setIsModalOpen(true)}
+              onError={() => setLogoSrc("/logo.png")} // fallback to local file
               style={{ cursor: "pointer" }}
             />
           </div>
 
           <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
             <img
-              src={LOGO_SVG}
+              src={logoSrc}
               alt="Studio Ghibli"
               style={{ width: "100%", height: "auto" }}
+              onError={() => setLogoSrc("/logo.png")}
             />
           </Modal>
 
