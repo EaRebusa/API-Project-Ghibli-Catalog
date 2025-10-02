@@ -1,4 +1,3 @@
-// src/components/GlareHover.jsx
 import './GlareHover.css';
 
 export default function GlareHover({
@@ -10,7 +9,7 @@ export default function GlareHover({
   transitionDuration = 2000,  // slower, cinematic effect
   playOnce = false,
 }) {
-  // convert hex to rgba
+
   const hex = glareColor.replace('#', '');
   let rgba = glareColor;
   if (/^[0-9A-Fa-f]{6}$/.test(hex)) {

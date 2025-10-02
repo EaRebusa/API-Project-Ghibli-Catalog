@@ -3,24 +3,30 @@
   margin: 0 auto;
   animation: fadeSlideIn 0.6s forwards;
   color: var(--text-color);
+  overflow: hidden; 
+  padding-bottom: 4rem; /* ensure enough space for overlay */
+  min-height: 100vh;
 }
-
 @keyframes fadeSlideIn {
   0% { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Backdrop gradient */
-.film-backdrop {
+
+/* Backdrop banner */
+.film-backdrop-video {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 400px;
-  background: linear-gradient(135deg, #7665d6, #3b3b79);
-  position: relative;
+  object-fit: cover;
+  z-index: -1;
 }
 
 .film-overlay {
-  position: absolute;
-  bottom: -120px;
+  position: relative;
+  bottom: auto;
   left: 50%;
   transform: translateX(-50%);
   width: 90%;
@@ -29,9 +35,11 @@
   flex-direction: column;
 }
 
+
 .back-button {
   align-self: flex-start;
   margin-bottom: 1rem;
+  margin-top: 1rem;
   background: #f3f3f3;
   border: none;
   padding: 8px 14px;
@@ -46,12 +54,12 @@
   background: #e0e0e0;
 }
 
-/* Hero block */
+
 .film-hero {
   display: flex;
   gap: 3rem;
   align-items: flex-start;
-  background: rgba(255, 255, 255, 0.66);
+  background: rgba(255, 255, 255, 0.85);
   padding: 1.5rem;
   border-radius: 12px;
   backdrop-filter: blur(4px);
@@ -79,6 +87,7 @@
 .film-info h1 {
   margin: 0 0 0.5rem;
   font-size: 2rem;
+  text-shadow: #2c2c3e 1px 1px 2px;
 }
 
 .film-info .year {
@@ -87,14 +96,21 @@
   color: var(--muted-text);
 }
 
+.film-info p {
+  margin: 0.3rem 0;
+  font-size: 1.1rem;
+  text-shadow: #2c2c3e 0.5px 0.5px 0.5px;
+}
+
 /* ---- Crossfade Titles ---- */
 .japanese-title {
   position: relative;
-  height: 1.5rem; /* lock height to prevent layout shift */
+  height: 1.5rem; 
   font-size: 1.2rem;
   margin-bottom: 1rem;
   cursor: pointer;
   color: var(--accent, #5A4E9D);
+  text-shadow: #4a4a64 0.3px 0.3px 0.3px;
 }
 
 .fade-text {
@@ -123,14 +139,30 @@
   margin: 0.3rem 0;
 }
 
-/* Description */
+
 .film-description {
-  margin-top: 8rem;
+  margin-top: 1vh;
   padding: 2rem;
   max-width: 900px;
   margin-left: auto;
   margin-right: auto;
   line-height: 1.6;
+}
+
+.film-description h2 {
+  margin-top: 0;
+  font-size: 1.8rem;
+  border-bottom: 2px solid var(--accent, #3d356b);
+  padding-bottom: 0.3rem;
+  text-shadow: #4a4a64 1px 1px 2px;
+}
+
+.film-description p {
+  margin-top: 0.8rem;
+  font-size: 1.2rem;
+  color: var(--text-color);
+  text-align: justify;
+  text-shadow: #2c2c3e 0.5px 0.5px 0.5px;
 }
 
 /* Prev/Next navigation */
@@ -156,6 +188,7 @@
   width: 80px;
   border-radius: 6px;
   flex-shrink: 0;
+  padding: 0.7rem;
 }
 
 .film-nav-card span {
@@ -171,7 +204,7 @@
 
 /* Dark mode */
 .dark .film-hero {
-  background: rgba(0,0,0,0.4);
+  background: rgba(20, 20, 20, 0.8);
 }
 
 .dark .film-nav-card {
@@ -183,7 +216,6 @@
   box-shadow: 0 4px 12px rgba(255,255,255,0.1);
 }
 
-/* loading spinner container */
 .loading-container {
   display: flex;
   justify-content: center;

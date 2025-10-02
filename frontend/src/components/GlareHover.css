@@ -1,6 +1,6 @@
 .glare-hover-wrapper {
   position: relative;
-  display: block; /* ensures full width/height of child */
+  display: block; 
   width: 106%;
   height: 100%;
 }

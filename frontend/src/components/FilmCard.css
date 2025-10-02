@@ -33,7 +33,6 @@
   box-shadow: 0 6px 16px var(--card-shadow);
 }
 
-/* Fade-in animation */
 .fade-in {
   opacity: 0;
   animation: fadeIn 0.5s forwards;

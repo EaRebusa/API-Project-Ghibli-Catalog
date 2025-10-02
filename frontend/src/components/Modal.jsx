@@ -1,4 +1,3 @@
-// src/components/Modal.jsx
 import "./Modal.css";
 
 export default function Modal({ isOpen, onClose, children }) {

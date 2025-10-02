@@ -1,12 +1,12 @@
 .about-page {
   position: relative;
   width: 100%;
-  min-height: 100vh;
+  min-height: 80vh;
   overflow: hidden;
-  color: white; /* text visible over video */
+  color: white;
 }
 
-/* Background video */
+
 .about-video {
   position: fixed;
   top: 0;
@@ -14,7 +14,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: 0; /* changed from -2 */
+  z-index: 0; 
 }
 
 .about-overlay {
@@ -26,8 +26,8 @@
   background: rgba(0, 0, 0, 0.20);
   z-index: 1;
 
-  animation: darkenOverlay 1s forwards;
-  animation-delay: 3s; /* start after 3 seconds */
+  animation: darkenOverlay 3s forwards;
+  animation-delay: 3.3s;
 }
 
 @keyframes darkenOverlay {
@@ -45,12 +45,12 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 2rem;
-  min-height: 87vh; /* ensures container fills most of viewport */
+  min-height: 86vh; 
   opacity: 0;
   animation: fadeIn 0.6s forwards;
   position: relative;
-  z-index: 2; /* bumped up so content is above video + overlay */
-  animation-delay: 3.2s; /* whole container waits 3 seconds */
+  z-index: 2;
+  animation-delay: 3.8s; 
 }
 
 @keyframes fadeIn {
@@ -70,7 +70,7 @@
   flex-wrap: wrap;
   gap: 2rem;
   margin-top: 2rem;
-  background-color: rgba(255, 255, 255, 0.8); /* white with 85% opacity */
+  background-color: rgba(255, 255, 255, 0.8); 
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -99,10 +99,10 @@
   filter: invert(1) brightness(1.2);
 }
 
-/* Responsive: stack vertically only on small screens */
+
 @media (max-width: 768px) {
   .about-card {
-    flex-direction: column; /* stacks logo + text */
+    flex-direction: column; 
     align-items: center;
   }
 
@@ -113,7 +113,7 @@
 
 .about-text {
   flex: 1;
-  color: #000000; /* dark text for readability */
+  color: #000000; 
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   text-shadow: #000000 0px 0px 1.5px;
 }
@@ -123,19 +123,35 @@
   line-height: 1.6;
 }
 
-/* Dark mode adjustments */
 .dark .about-card {
-  background-color: rgba(44, 44, 62, 0.85); /* semi-transparent dark */
+  background-color: rgba(44, 44, 62, 0.85); 
   box-shadow: 0 4px 12px rgba(255,255,255,0.05);
 }
 
+
+.about-container h1 {
+  margin-bottom: 0.3rem;
+  text-shadow: #000000 0px 0px 1.5px;
+  text-shadow: #4a4a64 1px 1px 2px;
+}
+
+.about-history h2, .about-funfacts h2 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  text-shadow: #000000 0px 0px 1.5px;
+}
+
+.about-history p, .about-funfacts p {
+  line-height: 1.6;
+  text-shadow: #000000 0px 0px 1.5px;
+}
 
 .dark .about-text p {
   color: #f0f0f0;
   text-shadow: #ffffff 0px 0px 1.5px;
 }
 
-/* Loading state */
+
 .loading-container {
   display: flex;
   justify-content: center;
@@ -143,12 +159,12 @@
   height: 50vh;
 }
 
-/* History section */
+
 .about-history {
   margin-top: 2rem;
   opacity: 0;
   animation: fadeIn 0.6s forwards;
-  animation-delay: 3.4s;
+  animation-delay: 3.10s;
 }
 
 .about-history h2, .about-history p {
@@ -171,12 +187,12 @@
   width: 150px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-/* Fun facts section */
+
 .about-funfacts {
   margin-top: 2rem;
   opacity: 0;
   animation: fadeIn 0.6s forwards;
-  animation-delay: 3.7s;
+  animation-delay: 3.15s;
 }
 
 .about-funfacts h2, .about-funfacts ul {
@@ -194,14 +210,13 @@
   line-height: 1.6;
 }
 
-/* Responsive adjustments */
+
 @media (max-width: 768px) {
   .team-cards {
     justify-content: center;
   }
 }
 
-/* Dark mode overlay stronger */
 .dark .about-overlay {
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.30);
 }

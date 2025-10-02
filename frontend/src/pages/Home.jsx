@@ -1,4 +1,3 @@
-// src/pages/Home.jsx
 import { useEffect, useState } from "react";
 import FilmCard from "../components/FilmCard";
 import { FourSquare } from "react-loading-indicators";
@@ -8,7 +7,7 @@ export default function Home() {
   const [films, setFilms] = useState([]);
   const [search, setSearch] = useState("");
   const [directorFilter, setDirectorFilter] = useState("");
-  const [yearFilter, setYearFilter] = useState(""); // new year filter
+  const [yearFilter, setYearFilter] = useState(""); 
   const [sortOption, setSortOption] = useState("");
   const [loading, setLoading] = useState(true);
 

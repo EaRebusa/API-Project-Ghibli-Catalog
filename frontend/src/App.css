@@ -2,7 +2,6 @@
   text-align: center;
 }
 
-/* Logo animation (unchanged) */
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -46,7 +45,7 @@
   --card-shadow: rgba(0,0,0,0.5);
 }
 
-/* Smooth transitions for components using variables */
+
 body, .film-card, .controls input, .controls select {
   transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }

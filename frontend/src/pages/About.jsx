@@ -1,4 +1,3 @@
-// src/pages/About.jsx
 import { useEffect, useState } from "react";
 import { FourSquare } from "react-loading-indicators";
 import Modal from "../components/Modal";
@@ -7,7 +6,7 @@ import "./About.css";
 const LOGO_SVG =
   "https://upload.wikimedia.org/wikipedia/en/c/ca/Studio_Ghibli_logo.svg";
 
-// Public hosted video (replace with your own link if needed)
+
 const BG_VIDEO = "/ghibli.mp4";
 
 export default function About() {

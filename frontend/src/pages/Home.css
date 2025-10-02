@@ -61,12 +61,12 @@
   box-shadow: 0 4px 12px rgba(255,255,255,0.05);
 }
 
-/* loading spinner container */
+
 .loading-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 50vh; /* vertically centered */
+  height: 50vh; 
   min-height: 93vh;
 }
 
