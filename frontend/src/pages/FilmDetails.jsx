@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { FourSquare } from "react-loading-indicators";
 import Modal from "../components/Modal";
 import "./FilmDetails.css";
-import "./CommentSection.css"; // <-- ADD THIS IMPORT
+import "./CommentSection.css";
 
 const BG_VIDEO = "/banner.mp4";
 const BG_IMAGE = "https://cdn.pfps.gg/banners/3187-studio-ghibli.png";
@@ -28,13 +28,16 @@ export default function FilmDetails() {
     useEffect(() => {
         setLoading(true);
         Promise.all([
-            fetch(`/api/films/${id}`).then((res) => res.json()),
-            fetch("/api/films").then((res) => res.json()),
-            fetch(`/api/comments/${id}`).then((res) => res.json()) // <-- FETCH COMMENTS
+            // --- 1. UPDATED ---
+            fetch(`${process.env.REACT_APP_API_URL}/api/films/${id}`).then((res) => res.json()),
+            // --- 2. UPDATED ---
+            fetch(`${process.env.REACT_APP_API_URL}/api/films`).then((res) => res.json()),
+            // --- 3. UPDATED ---
+            fetch(`${process.env.REACT_APP_API_URL}/api/comments/${id}`).then((res) => res.json())
         ]).then(([single, all, commentsData]) => {
             setFilm(single);
             setFilms(all);
-            setComments(commentsData); // <-- SET COMMENTS
+            setComments(commentsData);
             setLoading(false);
         });
     }, [id]);
@@ -42,16 +45,17 @@ export default function FilmDetails() {
     // --- NEW COMMENT SUBMIT HANDLER ---
     const handleSubmitComment = async (e) => {
         e.preventDefault();
-        if (!commentText.trim()) return; // Don't submit empty comments
+        if (!commentText.trim()) return;
 
         setIsSubmitting(true);
         const newCommentData = {
-            author: commentAuthor || "Anonymous", // Fallback if empty
+            author: commentAuthor || "Anonymous",
             comment: commentText,
         };
 
         try {
-            const res = await fetch(`/api/comments/${id}`, {
+            // --- 4. UPDATED ---
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/comments/${id}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newCommentData),
@@ -60,11 +64,7 @@ export default function FilmDetails() {
             if (!res.ok) throw new Error("Failed to post comment");
 
             const savedComment = await res.json();
-
-            // Add new comment to the top of the list
             setComments(prevComments => [savedComment, ...prevComments]);
-
-            // Clear form
             setCommentText("");
 
         } catch (err) {
@@ -90,7 +90,7 @@ export default function FilmDetails() {
 
     return (
         <div className="film-details-container" key={film.id}>
-            {/* ... (Backdrop, Overlay, and Hero sections are unchanged) ... */}
+            {/* ... (rest of your JSX is unchanged) ... */}
 
             <div className="film-backdrop-container">
                 {!videoError ? (
@@ -162,11 +162,9 @@ export default function FilmDetails() {
                 <p>{film.description}</p>
             </div>
 
-            {/* --- NEW COMMENT SECTION --- */}
             <div className="comments-section">
                 <h2>Comments ({comments.length})</h2>
 
-                {/* --- Comment Form --- */}
                 <form className="comment-form" onSubmit={handleSubmitComment}>
                     <div className="form-group">
                         <label htmlFor="author">Name</label>
@@ -193,7 +191,6 @@ export default function FilmDetails() {
                     </button>
                 </form>
 
-                {/* --- Comment List --- */}
                 <div className="comment-list">
                     {comments.map((comment) => (
                         <div key={comment._id} className="comment-card">
@@ -211,7 +208,6 @@ export default function FilmDetails() {
                     )}
                 </div>
             </div>
-            {/* --- END NEW COMMENT SECTION --- */}
 
             <div className="film-nav">
                 {prevFilm && (

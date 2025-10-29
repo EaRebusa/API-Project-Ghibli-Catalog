@@ -9,7 +9,7 @@ export default function FilmCard({ film, style }) {
 
     // 1. Fetch the like count when the card first loads
     useEffect(() => {
-        fetch(`/api/likes/${film.id}`)
+        fetch(`${process.env.REACT_APP_API_URL}/api/likes/${film.id}`)
             .then((res) => res.json())
             .then((data) => {
                 setLikeCount(data.likes);
@@ -26,7 +26,7 @@ export default function FilmCard({ film, style }) {
         setLikeCount(currentCount => currentCount + 1);
 
         // Send the "like" to the backend
-        fetch(`/api/films/${film.id}/like`, {
+        fetch(`${process.env.REACT_APP_API_URL}/api/films/${film.id}/like`,{
             method: "POST",
         })
             .then((res) => res.json())

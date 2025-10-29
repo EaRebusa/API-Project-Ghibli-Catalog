@@ -18,12 +18,12 @@ export default function Home() {
     // NEW: useEffect to populate dropdowns (runs only ONCE)
     useEffect(() => {
         // Fetch directors
-        fetch("/api/directors")
+        fetch(`${process.env.REACT_APP_API_URL}/api/directors`) // <-- CHANGED
             .then((res) => res.json())
             .then((data) => setDirectors(data));
 
         // Fetch years
-        fetch("/api/years")
+        fetch(`${process.env.REACT_APP_API_URL}/api/years`) // <-- CHANGED
             .then((res) => res.json())
             .then((data) => setYears(data));
     }, []); // Empty array means this runs once on mount
@@ -60,7 +60,7 @@ export default function Home() {
         // The final URL: /api/films?search=...&director=...&sort=...&order=...
         const queryString = params.toString();
 
-        fetch(`/api/films?${queryString}`)
+        fetch(`${process.env.REACT_APP_API_URL}/api/films?${queryString}`) // <-- CHANGED
             .then((res) => res.json())
             .then((data) => {
                 setFilms(data);
