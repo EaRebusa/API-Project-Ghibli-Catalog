@@ -7,7 +7,7 @@ import dotenv from "dotenv";     // Import dotenv
 dotenv.config(); // Load variables from .env file
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 const GHIBLI_API = "https://ghibliapi.vercel.app/films";
 
 // --- CACHE VARIABLES ---
