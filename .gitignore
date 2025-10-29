@@ -1,0 +1,15 @@
+# Ignore all node_modules folders
+node_modules/
+
+# Ignore build folders
+build/
+dist/
+
+# Ignore .env files
+.env
+.env.development
+.env.production
+.env.local
+
+# Ignore OS files
+.DS_Store

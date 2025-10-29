@@ -1,0 +1,174 @@
+/*
+ * This file now uses your CSS variables from index.css.
+ * It will automatically adapt to light/dark mode.
+ */
+
+.comments-section {
+    width: 100%;
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    color: var(--text-color);
+    border-top: 1px solid var(--border-color);
+    box-sizing: border-box;
+    /* Animation for the whole section fading in */
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.comments-section h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* --- Form Styles --- */
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    color: var(--text-color-subtle);
+}
+
+.comment-form input,
+.comment-form textarea {
+    background: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.comment-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* --- Reactive Focus --- */
+.comment-form input:focus,
+.comment-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    /* This shadow matches your controls in index.css */
+    box-shadow: 0 0 6px rgba(123, 104, 238, 0.3);
+}
+
+.comment-form button {
+    align-self: flex-end;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    /* --- Reactive Transitions --- */
+    transition: background-color 0.2s, transform 0.2s, filter 0.2s;
+}
+
+.comment-form button:hover {
+    filter: brightness(1.15); /* Makes it slightly brighter */
+}
+
+.comment-form button:active {
+    transform: scale(0.98); /* Click effect */
+}
+
+.comment-form button:disabled {
+    background-color: var(--border-color);
+    color: var(--text-color-subtle);
+    cursor: not-allowed;
+    filter: brightness(1);
+}
+
+
+/* --- List Styles --- */
+.comment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.comment-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px 20px;
+    box-shadow: 0 2px 4px var(--card-shadow);
+    /* --- Reactive Transitions --- */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    /* --- Staggered fade-in for loaded comments --- */
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* * This adds a slight delay to each card as it loads.
+ * You can add more if you want a longer stagger.
+ */
+.comment-card:nth-child(1) { animation-delay: 0.1s; }
+.comment-card:nth-child(2) { animation-delay: 0.2s; }
+.comment-card:nth-child(3) { animation-delay: 0.3s; }
+/* etc. */
+
+/* --- Reactive Hover --- */
+.comment-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px var(--card-shadow);
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.comment-header strong {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+}
+
+.comment-date {
+    font-size: 0.8rem;
+    color: var(--text-color-subtle);
+}
+
+.comment-card p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--text-color);
+    margin: 0;
+}
+
+/* --- New Comments --- */
+/* This makes sure new comments (added at the top) fade in */
+.comment-list .comment-card:first-child {
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* --- Keyframe Animation --- */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
