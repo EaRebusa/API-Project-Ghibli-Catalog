@@ -1,5 +1,7 @@
 # 🎬 Studio Ghibli Film Catalog
 
+- REBUSA, PACATANG, ESTABILLO
+
 A full-stack web application built with React, Node.js, and Express that allows users to browse, search, and discuss their favorite Studio Ghibli films.
 
 This project features a responsive React frontend and an Express backend that serves as a proxy to the Studio Ghibli API. It also includes a dedicated MongoDB database for user-generated content like likes and comments, (USERS WIP Guest Mode/With Accounts).
