@@ -1,4 +1,4 @@
-🎬 Studio Ghibli Film Catalog
+# 🎬 Studio Ghibli Film Catalog
 
 A full-stack web application built with React, Node.js, and Express that allows users to browse, search, and discuss their favorite Studio Ghibli films.
 
