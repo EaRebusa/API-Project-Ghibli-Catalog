@@ -1,271 +1,118 @@
-# 🎬 Studio Ghibli Film Catalog
+# 🎬 Ghibli Film Catalog
+
+A beautifully designed, interactive web application for exploring the films of Studio Ghibli. Built with the MERN stack (MongoDB, Express, React, Node.js) and featuring a host of modern animations and UI effects to create a rich, engaging user experience.
+
+---
+
+## ✨ Features
+
+This project is packed with modern, interactive features designed to create a delightful user experience.
+
+#### Film Discovery & Browsing
+- **Dynamic Search:** Real-time search with debouncing for efficient filtering.
+- **Smart Filters:** Director and Year dropdowns are context-aware, updating their options based on your current selection.
+- **Advanced Sorting:** Sort the film catalog by release year or Rotten Tomatoes score, in ascending or descending order.
+
+#### Interactive UI & Animations
+- **Full-Width Parallax Banner:** The home page features a stunning full-width banner with a multi-layered parallax scroll effect on both the background and text.
+- **GSAP Text Animation:** The "Welcome" title on the home page uses a GSAP-powered shuffle animation for a high-quality entrance.
+- **3D Tilting Cards:** Film posters on the details page and in modals have a 3D tilt effect on mouse hover, powered by Framer Motion.
+- **WebGL Circular Navigation:** A beautiful, interactive circular gallery (powered by OGL) for navigating between films.
+-**Animated Comment List:** The comment section features a gracefully animated list that animates items as they scroll into view.
+- **Confetti Celebration:** Clicking the "Clap" button unleashes a celebratory shower of confetti.
+- **Typing Effect:** The film synopsis is revealed with a dynamic typing animation.
+- **Gradient Text & Hovers:** A theme-aware, animated gradient is used for the user welcome message and for link hover effects in the navigation and footer.
+
+#### User & Engagement System
+- **Secure Authentication:** Full user registration and login system using JWT (JSON Web Tokens) for secure sessions.
+- **Claps & Comments:** Authenticated users can "clap" for their favorite films and post comments.
+- **Optimistic UI Updates:** Posting comments and clapping provides instant feedback to the user, with the UI updating immediately while the backend request is processed.
+
+#### Theming & Design
+- **Light & Dark Mode:** A seamless, theme-aware design with a persistent theme toggle. All components, gradients, and icons adapt to the selected mode.
+- **Responsive Layout:** The application is designed to be fully responsive and looks great on a variety of screen sizes.
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **React.js:** Core UI library.
+- **React Router:** For client-side routing.
+- **Animation Libraries:**
+  - **GSAP (GreenSock Animation Platform):** For high-performance text animations.
+  - **Framer Motion:** For 3D card tilting and list animations.
+  - **OGL (Minimal WebGL Library):** For the circular film navigation gallery.
+- **react-confetti:** For the celebratory clap animation.
+- **Styling:** Plain CSS with CSS Variables for robust theming.
+
+### Backend
+- **Node.js:** JavaScript runtime environment.
+- **Express.js:** Web application framework.
+- **MongoDB:** NoSQL database for storing film data, users, comments, and claps.
+- **Mongoose:** Object Data Modeling (ODM) library for MongoDB.
+- **JWT (JSON Web Token):** For secure user authentication.
+- **dotenv:** For managing environment variables.
+
+---
+
+## 🚀 Getting Started
+
+To get a local copy up and running, follow these simple steps.
+
+### Prerequisites
+- Node.js (v18 or later)
+- npm
+- MongoDB (local instance or a cloud service like MongoDB Atlas)
+
+### Installation
+
+1. **Clone the repository:**
+   ```sh
+   git clone https://github.com/EaRebusa/API-Project-Ghibli-Catalog.git
+   cd API-Project-Ghibli-Catalog
+   ```
+
+2. **Setup the Backend:**
+   - Navigate to the `backend` directory: `cd backend`
+   - Install NPM packages:
+     ```sh
+     npm install
+     ```
+   - Create a `.env` file in the `backend` directory and add your environment variables:
+     ```
+     MONGO_URI=your_mongodb_connection_string
+     JWT_SECRET=your_jwt_secret_key
+     PORT=5000
+     ```
+   - Seed the database with the initial film data. This script fetches data from the public Ghibli API and populates your local database.
+     ```sh
+     npm run seed
+     ```
+   - Start the backend server:
+     ```sh
+     npm run dev
+     ```
+
+3. **Setup the Frontend:**
+   - Open a new terminal and navigate to the `frontend` directory: `cd frontend`
+   - Install NPM packages:
+     ```sh
+     npm install
+     ```
+   - Start the React development server:
+     ```sh
+     npm start
+     ```
 
-A full-stack MERN (MongoDB, Express, React, Node.js) application that provides a complete, interactive catalog of Studio Ghibli films. This project features user authentication with JWT, a protected 'likes' system, and a dynamic 'comments' section, all built on a professional, scalable MVC (Model-View-Controller) backend architecture.
+The application should now be running on `http://localhost:3000`.
 
-Features
+---
 
-Full MERN Stack: Built from the ground up with React, Express, Node.js, and MongoDB.
+## 📄 License
 
-Professional MVC Architecture: Backend logic is cleanly separated into Models, Views, and Controllers for scalability and maintainability.
+This project is open source and available under the MIT License.
 
-Full User Authentication: Secure user registration and login using bcrypt for password hashing and jsonwebtoken (JWT) for session management.
-
-Protected Routes: Backend middleware verifies JWTs to protect routes (like "liking" a film), distinguishing between logged-in users and guests.
-
-Role-Based Interaction:
-
-Guests can browse films and post comments as "Anonymous".
-
-Logged-in Users can post comments under their own username and are the only users who can "like" films.
-
-Dynamic Likes & Comments: All user-generated content (likes, comments, users) is persisted in a MongoDB database.
-
-Efficient Backend API: All searching, sorting, and filtering logic is handled server-side to minimize client-side load.
-
-Offline-Ready: Built to run 100% offline, using a local ghibli-data.json file for film data and a local MongoDB instance.
-
-Polished UI: Fully responsive design with a switchable Light/Dark mode theme.
-
-# Tech Stack
-
-Frontend:
-
-React (Hooks, Context API)
-
-React Router
-
-jwt-decode
-
-Backend:
-
-Node.js
-
-Express
-
-MongoDB (with Mongoose)
-
-bcryptjs (Password Hashing)
-
-jsonwebtoken (Auth Tokens)
-
-dotenv
-
-# Project Structure
-
-This project uses a clean, professional file structure to separate concerns.
-
-ghibli-catalog/
-│
-├── backend/
-│   ├── controllers/
-│   │   ├── authController.js
-│   │   ├── commentController.js
-│   │   ├── filmController.js
-│   │   └── likeController.js
-│   ├── middleware/
-│   │   └── authMiddleware.js
-│   ├── models/
-│   │   ├── comment.js
-│   │   ├── like.js
-│   │   └── user.js
-│   ├── routes/
-│   │   ├── auth.js
-│   │   ├── comments.js
-│   │   ├── films.js
-│   │   └── likes.js
-│   ├── ghibli-data.json
-│   ├── .env              (You must create this)
-│   ├── package.json
-│   └── server.js
-│
-└── frontend/
-    ├── src/
-    │   ├── api/
-    │   │   └── api.js
-    │   ├── assets/
-    │   │   └── banner.jpg
-    │   ├── components/
-    │   ├── context/
-    │   │   ├── AuthContext.jsx
-    │   │   └── ThemeContext.jsx
-    │   ├── pages/
-    │   │   ├── Home.jsx
-    │   │   ├── FilmDetails.jsx
-    │   │   ├── Login.jsx
-    │   │   └── Register.jsx
-    │   ├── .env.development (You must create this)
-    │   └── App.jsx
-    └── package.json
-
-
-# How to Run Locally
-
-1. Prerequisites
-
-Node.js installed
-
-MongoDB Community Server installed and running locally.
-
-2. Clone the Repository
-
-git clone [https://github.com/your-username/ghibli-catalog.git](https://github.com/your-username/ghibli-catalog.git)
-cd ghibli-catalog
-
-
-3. Backend Setup
-
-Navigate to the backend: cd backend
-
-Install dependencies: npm install
-
-Create a .env file in the backend folder and add the following:
-
-# Your local MongoDB connection string
-MONGO_URI=mongodb://localhost:27017/ghibli-catalog
-
-# Your secret for signing JWTs (can be any random string)
-JWT_SECRET=this_is_a_very_secret_key
-
-
-Start the backend server: npm start
-(It should connect to your local MongoDB and log: Backend running on http://localhost:5000)
-
-4. Frontend Setup
-
-Open a new terminal.
-
-Navigate to the frontend: cd frontend
-
-Install dependencies: npm install
-
-Create a .env.development file in the frontend folder and add the following:
-
-# The URL of your local backend server
-REACT_APP_API_URL=http://localhost:5000
-
-
-Start the frontend app: npm start
-
-# The app will open automatically at http://localhost:3000. You can now register a new user and test all features.
-
-API Endpoints
-
-Auth API (/api/auth)
-
-Method
-
-Endpoint
-
-Description
-
-Access
-
-POST
-
-/register
-
-Register a new user.
-
-Public
-
-POST
-
-/login
-
-Log in a user and get a JWT.
-
-Public
-
-Film API (/api/films)
-
-Method
-
-Endpoint
-
-Description
-
-Access
-
-GET
-
-/
-
-Get all films (with search/sort/filter).
-
-Public
-
-GET
-
-/:id
-
-Get a single film by its ID.
-
-Public
-
-GET
-
-/directors
-
-Get a unique list of all directors.
-
-Public
-
-GET
-
-/years
-
-Get a unique list of all release years.
-
-Public
-
-Like API (/api/likes)
-
-Method
-
-Endpoint
-
-Description
-
-Access
-
-GET
-
-/:filmId
-
-Get the like count for a film.
-
-Public
-
-POST
-
-/:filmId/like
-
-Add a like to a film.
-
-Protected
-
-Comment API (/api/comments)
-
-Method
-
-Endpoint
-
-Description
-
-Access
-
-GET
-
-/:filmId
-
-Get all comments for a film.
-
-Public
-
-POST
-
-/:filmId
-
-Post a new comment.
-
-Public (Logic changes for users)
+## 🙏 Acknowledgements
+- Film data provided by the Studio Ghibli API.
+- Various UI components and animations inspired by the open-source community.
