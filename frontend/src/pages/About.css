@@ -96,7 +96,7 @@
 /* --- NEW: Theme-aware logo inversion for main page and modal --- */
 
 /* In light mode, the main image is normal, but the modal image is inverted. */
-.modal-overlay .tilted-card-img {
+.about-page .modal-overlay .tilted-card-img {
   filter: invert(1);
 }
 
