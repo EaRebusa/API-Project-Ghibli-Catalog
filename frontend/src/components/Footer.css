@@ -41,3 +41,17 @@
   color: #ffffff; /* Force text to be white */
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4); /* Add shadow for readability */
 }
+
+.footer-socials {
+  margin-top: 1rem;
+}
+
+.social-icon {
+  width: 28px;
+  height: 28px;
+  transition: transform 0.2s ease;
+}
+
+.social-icon:hover {
+  transform: scale(1.15);
+}
