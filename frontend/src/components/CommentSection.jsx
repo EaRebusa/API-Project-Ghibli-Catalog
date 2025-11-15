@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { postComment } from '../api';
 import './CommentSection.css';
+import AnimatedList from './AnimatedList'; // Import the new component
 import { toast } from 'react-hot-toast';
 
 export default function CommentSection({
@@ -70,6 +71,17 @@ export default function CommentSection({
         }
     };
 
+    // Map the comments data to JSX components to pass to the AnimatedList
+    const commentItems = comments.map((comment) => (
+        <div key={comment._id} className={`comment-card ${comment.isOptimistic ? 'optimistic' : ''}`}>
+            <div className="comment-header">
+                <strong>{comment.author?.username || 'Anonymous'}</strong>
+                <span className="comment-date">{new Date(comment.createdAt).toLocaleString()}</span>
+            </div>
+            <p>{comment.comment}</p>
+        </div>
+    ));
+
     return (
         <div className="comments-section">
             <h2>Comments ({comments.length})</h2>
@@ -90,16 +102,8 @@ export default function CommentSection({
                 </button>
             </form>
 
-            <div className="comment-list">
-                {comments.map((comment) => (
-                    <div key={comment._id} className={`comment-card ${comment.isOptimistic ? 'optimistic' : ''}`}>
-                        <div className="comment-header">
-                            <strong>{comment.author?.username || 'Anonymous'}</strong>
-                            <span className="comment-date">{new Date(comment.createdAt).toLocaleString()}</span>
-                        </div>
-                        <p>{comment.comment}</p>
-                    </div>
-                ))}
+            <div className="comment-list-wrapper">
+                <AnimatedList items={commentItems} showGradients={true} enableArrowNavigation={false} />
                 {comments.length === 0 && <p>Be the first to comment!</p>}
             </div>
 

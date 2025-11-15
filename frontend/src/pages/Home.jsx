@@ -103,8 +103,8 @@ export default function Home() {
         if (sortOption) {
             const [key, order] = sortOption.split('-');
             filmsToProcess.sort((a, b) => {
-                const valA = key === 'score' ? parseInt(a.rt_score) : a.release_date;
-                const valB = key === 'score' ? parseInt(b.rt_score) : b.release_date;
+                const valA = key === 'rt_score' ? parseInt(a.rt_score) : a.release_date;
+                const valB = key === 'rt_score' ? parseInt(b.rt_score) : b.release_date;
                 return order === 'desc' ? valB - valA : valA - valB;
             });
         }
