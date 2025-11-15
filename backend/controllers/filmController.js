@@ -19,14 +19,11 @@ export const getFilms = async (req, res) => {
         }
 
         // 2. Build the sort object for Mongoose
-        const sortQuery = {};
-        if (sort) {
-            // Mongoose sort order is 1 for 'asc' and -1 for 'desc'
-            sortQuery[sort] = order === 'desc' ? -1 : 1;
-        } else {
-            // Default sort by release date if no sort param is given
-            sortQuery['release_date'] = 1;
-        }
+        // Default sort by release date if no sort param is given
+        const sortKey = sort || 'release_date';
+        // Mongoose sort order is 1 for 'asc' and -1 for 'desc'
+        const sortOrder = order === 'desc' ? -1 : 1;
+        const sortQuery = { [sortKey]: sortOrder };
 
         // 3. Execute the query with filters and sorting
         const films = await Film.find(filterQuery).sort(sortQuery);

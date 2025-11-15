@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FourSquare } from "react-loading-indicators";
 import Modal from "../components/Modal";
+import { getFilmById, getFilms, getComments, postComment, getLikes, likeFilm } from "../api";
 import "./FilmDetails.css";
 import "./CommentSection.css";
 
@@ -18,61 +19,38 @@ export default function FilmDetails() {
     const [showRomanized, setShowRomanized] = useState(false);
     const [videoError, setVideoError] = useState(false);
 
-    // --- NEW COMMENT STATE ---
     const [comments, setComments] = useState([]);
     const [commentAuthor, setCommentAuthor] = useState("Anonymous");
     const [commentText, setCommentText] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
-    // --- END NEW COMMENT STATE ---
 
-    // --- NEW LIKE STATE ---
     const [likes, setLikes] = useState(0);
-    // --- END NEW LIKE STATE ---
 
     useEffect(() => {
-        console.log("useEffect triggered");
         setLoading(true);
         Promise.all([
-            // --- 1. UPDATED ---
-            fetch(`${process.env.REACT_APP_API_URL}/api/films/${id}`).then((res) => res.json()),
-            // --- 2. UPDATED ---
-            fetch(`${process.env.REACT_APP_API_URL}/api/films`).then((res) => res.json()),
-            // --- 3. UPDATED ---
-            fetch(`${process.env.REACT_APP_API_URL}/api/comments/${id}`).then((res) => res.json()),
-            // --- 4. NEW ---
-            fetch(`${process.env.REACT_APP_API_URL}/api/likes/${id}`).then((res) => res.json())
+            getFilmById(id),
+            getFilms(),
+            getComments(id),
+            getLikes(id)
         ]).then(([single, all, commentsData, likesData]) => {
-            console.log("Data fetched:", { single, all, commentsData, likesData });
             setFilm(single);
             setFilms(all);
             setComments(commentsData);
-            // --- 5. NEW ---
             setLikes(likesData.likes);
-            console.log("Likes state set to:", likesData.likes);
             setLoading(false);
         });
     }, [id]);
 
-    // --- NEW LIKE HANDLER ---
     const handleLike = async () => {
-        console.log("handleLike called");
-        try {
-            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/likes/${id}/like`, {
-                method: "POST",
-            });
-            if (!res.ok) throw new Error("Failed to like the film");
-            const updatedLikes = await res.json();
-            console.log("Like response received:", updatedLikes);
+        const updatedLikes = await likeFilm(id);
+        if (updatedLikes) {
             setLikes(updatedLikes.likes);
-            console.log("Likes state updated to:", updatedLikes.likes);
-        } catch (err) {
-            console.error(err);
+        } else {
             alert("Failed to like the film. Please try again.");
         }
     };
-    // --- END NEW LIKE HANDLER ---
 
-    // --- NEW COMMENT SUBMIT HANDLER ---
     const handleSubmitComment = async (e) => {
         e.preventDefault();
         if (!commentText.trim()) return;
@@ -83,28 +61,16 @@ export default function FilmDetails() {
             comment: commentText,
         };
 
-        try {
-            // --- 4. UPDATED ---
-            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/comments/${id}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(newCommentData),
-            });
+        const savedComment = await postComment(id, newCommentData);
 
-            if (!res.ok) throw new Error("Failed to post comment");
-
-            const savedComment = await res.json();
+        if (savedComment) {
             setComments(prevComments => [savedComment, ...prevComments]);
             setCommentText("");
-
-        } catch (err) {
-            console.error(err);
+        } else {
             alert("Failed to submit comment. Please try again.");
-        } finally {
-            setIsSubmitting(false);
         }
+        setIsSubmitting(false);
     };
-    // --- END NEW COMMENT SUBMIT HANDLER ---
 
     if (loading) {
         return (
@@ -120,8 +86,6 @@ export default function FilmDetails() {
 
     return (
         <div className="film-details-container" key={film.id}>
-            {/* ... (rest of your JSX is unchanged) ... */}
-
             <div className="film-backdrop-container">
                 {!videoError ? (
                     <video
@@ -171,26 +135,24 @@ export default function FilmDetails() {
                             onMouseLeave={() => setShowRomanized(false)}
                             onClick={() => setShowRomanized((prev) => !prev)}
                         >
-              <span className={`fade-text ${showRomanized ? "hidden" : "visible"}`}>
-                {film.original_title}
-              </span>
+                            <span className={`fade-text ${showRomanized ? "hidden" : "visible"}`}>
+                                {film.original_title}
+                            </span>
                             <span className={`fade-text ${showRomanized ? "visible" : "hidden"}`}>
-                {film.original_title_romanised}
-              </span>
+                                {film.original_title_romanised}
+                            </span>
                         </h3>
 
                         <p><strong>Director:</strong> {film.director}</p>
                         <p><strong>Producer:</strong> {film.producer}</p>
                         <p><strong>Running Time:</strong> {film.running_time} min</p>
                         <p><strong>🍅 Rotten Tomatoes:</strong> {film.rt_score}</p>
-                        {/* --- NEW LIKE BUTTON --- */}
                         <div className="like-section">
                             <button onClick={handleLike} className="like-button">
                                 ❤️ Like
                             </button>
                             <span>{likes} likes</span>
                         </div>
-                        {/* --- END NEW LIKE BUTTON --- */}
                     </div>
                 </div>
             </div>
@@ -235,8 +197,8 @@ export default function FilmDetails() {
                             <div className="comment-header">
                                 <strong>{comment.author}</strong>
                                 <span className="comment-date">
-                  {new Date(comment.createdAt).toLocaleString()}
-                </span>
+                                    {new Date(comment.createdAt).toLocaleString()}
+                                </span>
                             </div>
                             <p>{comment.comment}</p>
                         </div>
