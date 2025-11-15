@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import FilmCard from "../components/FilmCard";
 import { FourSquare } from "react-loading-indicators";
+import { getFilms, getDirectors, getYears } from "../api";
 import "./Home.css";
 
 export default function Home() {
@@ -11,68 +12,33 @@ export default function Home() {
     const [sortOption, setSortOption] = useState("");
     const [loading, setLoading] = useState(true);
 
-    // NEW: State for our dropdowns
     const [directors, setDirectors] = useState([]);
     const [years, setYears] = useState([]);
 
-    // NEW: useEffect to populate dropdowns (runs only ONCE)
     useEffect(() => {
-        // Fetch directors
-        fetch(`${process.env.REACT_APP_API_URL}/api/directors`) // <-- CHANGED
-            .then((res) => res.json())
-            .then((data) => setDirectors(data));
+        getDirectors().then(setDirectors);
+        getYears().then(setYears);
+    }, []);
 
-        // Fetch years
-        fetch(`${process.env.REACT_APP_API_URL}/api/years`) // <-- CHANGED
-            .then((res) => res.json())
-            .then((data) => setYears(data));
-    }, []); // Empty array means this runs once on mount
-
-    // MODIFIED: useEffect to fetch films (runs when filters change)
     useEffect(() => {
         setLoading(true);
 
-        // Build the query string
-        const params = new URLSearchParams();
-
-        if (search) {
-            params.append('search', search);
-        }
-        if (directorFilter) {
-            params.append('director', directorFilter);
-        }
-        if (yearFilter) {
-            params.append('year', yearFilter);
-        }
-
-        // Translate our sortOption (e.g., "year-desc") into
-        // backend params (sort=release_date & order=desc)
+        const params = {};
+        if (search) params.search = search;
+        if (directorFilter) params.director = directorFilter;
+        if (yearFilter) params.year = yearFilter;
         if (sortOption) {
-            const [key, order] = sortOption.split('-'); // "year-desc" -> ["year", "desc"]
-
-            // Translate frontend key to backend key
+            const [key, order] = sortOption.split('-');
             const sortKey = key === 'year' ? 'release_date' : 'rt_score';
-
-            params.append('sort', sortKey);
-            params.append('order', order);
+            params.sort = sortKey;
+            params.order = order;
         }
 
-        // The final URL: /api/films?search=...&director=...&sort=...&order=...
-        const queryString = params.toString();
-
-        fetch(`${process.env.REACT_APP_API_URL}/api/films?${queryString}`) // <-- CHANGED
-            .then((res) => res.json())
-            .then((data) => {
-                setFilms(data);
-                setLoading(false);
-            });
-
-        // Re-run this effect whenever any filter changes
+        getFilms(params).then(data => {
+            setFilms(data);
+            setLoading(false);
+        });
     }, [search, directorFilter, yearFilter, sortOption]);
-
-
-    // DELETED: We don't need 'displayedFilms' anymore!
-    // The 'films' state now *is* the displayed list.
 
     if (loading) {
         return (
@@ -92,7 +58,6 @@ export default function Home() {
                     onChange={(e) => setSearch(e.target.value)}
                 />
 
-                {/* This dropdown now uses the 'directors' state */}
                 <select
                     value={directorFilter}
                     onChange={(e) => setDirectorFilter(e.target.value)}
@@ -104,7 +69,6 @@ export default function Home() {
                     ))}
                 </select>
 
-                {/* This dropdown now uses the 'years' state */}
                 <select
                     value={yearFilter}
                     onChange={(e) => setYearFilter(e.target.value)}
@@ -130,13 +94,11 @@ export default function Home() {
             </div>
 
             <div className="film-grid">
-                {/* MODIFIED: We map over 'films' directly */}
                 {films.map((film, idx) => (
                     <FilmCard
                         key={film.id}
                         film={{
                             ...film,
-                            // We can still keep this client-side highlighting!
                             highlightedTitle: search
                                 ? film.title.replace(
                                     new RegExp(`(${search})`, "gi"),
