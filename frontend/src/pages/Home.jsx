@@ -3,6 +3,7 @@ import FilmCard from "../components/FilmCard";
 import { useTheme } from "../context/ThemeContext";
 import Modal from "../components/Modal";
 import Loader from "../components/Loader"; // Import the new Loader
+import Shuffle from "../components/Shuffle"; // Import the new Shuffle component
 import { getFilms, getDirectors, getYears } from "../api";
 import "./Home.css";
 
@@ -117,15 +118,30 @@ export default function Home() {
     }
 
     return (
-        <div className={`home-container ${theme}`}>
-            <div
-                className="home-banner"
-                onClick={() => setIsBannerModalOpen(true)}
-                style={{ backgroundPositionY: `${30 + scrollPosition * 0.1}%` }}
-            >
-                <div className="banner-content">
-                    <h1>Welcome.</h1>
-                    <h2>Explore the timeless magic of Studio Ghibli. Millions of films to discover. Explore now.</h2>
+        <div className={`home-page ${theme}`}>
+            {/* --- BANNER IS NOW FULL-WIDTH --- */}
+            <div className="home-banner-wrapper">
+                <div
+                    className="home-banner"
+                    onClick={() => setIsBannerModalOpen(true)}
+                    style={{ backgroundPositionY: `${30 + scrollPosition * 0.1}%` }}
+                >
+                    <div
+                        className="banner-content"
+                        style={{ transform: `translateY(${scrollPosition * 0.3}px)` }}
+                    >
+                        <Shuffle
+                            text="Welcome!"
+                            shuffleDirection="right"
+                            duration={0.3}
+                            animationMode="evenodd"
+                            shuffleTimes={1}
+                            ease="power3.out"
+                            stagger={0.03}
+                            className="home-banner-title"
+                        />
+                        <h2>Explore the timeless magic of Studio Ghibli. Explore now.</h2>
+                    </div>
                 </div>
             </div>
 
@@ -137,19 +153,21 @@ export default function Home() {
                 />
             </Modal>
 
-            <div className="controls">
-                <input
-                    type="text"
-                    placeholder="Search by title..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
+            {/* --- MAIN CONTENT REMAINS CENTERED --- */}
+            <div className="home-container">
+                <div className="controls">
+                    <input
+                        type="text"
+                        placeholder="Search by title..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
 
-                <select
-                    value={directorFilter}
-                    onChange={(e) => setDirectorFilter(e.target.value)}
-                    className="animated-dropdown"
-                >
+                    <select
+                        value={directorFilter}
+                        onChange={(e) => setDirectorFilter(e.target.value)}
+                        className="animated-dropdown"
+                    >
                     <option value="">All Directors</option>
                     {availableDirectors.map(d => (
                         <option key={d} value={d}>{d}</option>
@@ -196,6 +214,7 @@ export default function Home() {
                         style={{ animationDelay: `${idx * 0.08}s` }}
                     />
                 ))}
+            </div>
             </div>
         </div>
     );

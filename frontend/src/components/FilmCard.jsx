@@ -38,7 +38,7 @@ export default function FilmCard({ film, style }) {
     };
 
     return (
-        <GlareHover className="film-card-wrapper" glareOpacity={0.15} glareSize={400} glareAngle={-25} transitionDuration={900}>
+        <GlareHover className="film-card-wrapper" glareOpacity={0.15} glareSize={400} glareAngle={-25} transitionDuration={1200}>
             <div
                 className="film-card fade-in"
                 style={style}

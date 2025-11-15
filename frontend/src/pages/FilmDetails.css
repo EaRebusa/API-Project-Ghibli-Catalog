@@ -116,7 +116,7 @@
   display: inline-block;
   background: none;
   border: none;
-  padding: 0;
+  padding: 0.5rem;
   margin: 0;
   font-family: inherit;
   font-size: 1.2rem;
@@ -147,7 +147,7 @@
 }
 
 .film-info p {
-  margin: 0.3rem 0;
+  margin: 0.6rem 0;
 }
 
 

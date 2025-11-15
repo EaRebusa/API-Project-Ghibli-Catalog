@@ -14,8 +14,8 @@ export default function Footer() {
             <div className="footer-content">
                 <p>&copy; {currentYear} Ghibli Film Catalog. All Rights Reserved.</p>
                 <p>
-                    Film data from{' '}
-                    <a href="https://ghibliapi.vercel.app/" target="_blank" rel="noopener noreferrer">
+                    Film data from
+                    <a href="https://ghibliapi.vercel.app/" target="_blank" rel="noopener noreferrer" className="gradient-hover">
                         Studio Ghibli API
                     </a>
                     .

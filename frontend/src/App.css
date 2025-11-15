@@ -21,6 +21,7 @@
   --footer-border-color: rgba(0, 0, 0, 0.1);
   --primary-color: #7b68ee;
   --logo-filter: invert(0);
+  --hover-gradient: linear-gradient(to right, #ff7e5f, #ff4b2b, #ff7e5f);
 }
 
 .dark {
@@ -35,9 +36,24 @@
   --footer-border-color: rgba(255, 255, 255, 0.15);
   --primary-color: #9370DB; /* A softer, desaturated purple for dark mode */
   --logo-filter: invert(1); /* Make logos white */
+  --hover-gradient: linear-gradient(to right, #DA70D6, #00BFFF, #DA70D6);
 }
 
 
 body, .film-card, .controls input, .controls select {
   transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* --- NEW: Gradient Hover Effect for Links --- */
+.gradient-hover {
+  background-image: var(--hover-gradient);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: var(--text-color); /* Start with the normal text color */
+  transition: color 0.3s ease-out;
+}
+
+.gradient-hover:hover {
+  color: transparent; /* On hover, make the text transparent to reveal the gradient */
 }

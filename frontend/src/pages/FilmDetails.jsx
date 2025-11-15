@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import Modal from "../components/Modal";
 import CommentSection from "../components/CommentSection";
 import Loader from "../components/Loader"; // Import the new Loader
+import TextType from "../components/TextType"; // Import the new TextType component
 import FilmNavigation from "../components/FilmNavigation";
 import { useFilmData } from "../hooks/useFilmData"; // <-- Import the new hook
 import { clapForFilm } from '../api';
@@ -145,7 +146,15 @@ export default function FilmDetails() {
 
             <div className="film-description">
                 <h2>Synopsis</h2>
-                <p>{film.description}</p>
+                <TextType
+                    as="p" // Render as a paragraph tag to inherit existing styles
+                    text={[film.description]}
+                    typingSpeed={10} // A much faster speed for the paragraph
+                    loop={false} // We only want it to type once
+                    startOnVisible={true} // Start animation when it scrolls into view
+                    showCursor={true}
+                    cursorCharacter="_"
+                />
             </div>
 
             <CommentSection

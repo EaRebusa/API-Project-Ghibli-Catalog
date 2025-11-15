@@ -1,22 +1,32 @@
-.home-container {
-  /* This ensures the container uses the theme's background color and transitions smoothly */
+.home-page {
+  /* This is our new top-level container */
   background-color: var(--bg-color);
   transition: background-color 0.3s ease;
+}
+
+.home-container {
+  /* This ensures the container uses the theme's background color and transitions smoothly */
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
 }
 
+.home-banner-wrapper {
+  width: 100%;
+  height: 500px; /* --- Made the banner larger --- */
+  overflow: hidden; /* This contains the banner's hover effect */
+  margin-bottom: 2rem;
+  border-bottom-left-radius: 6px; /* --- Added border radius --- */
+  border-bottom-right-radius: 6px;
+}
+
 .home-banner {
     position: relative;
-    height: 350px;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    border-radius: 12px;
-    overflow: hidden;
     color: white;
     text-align: center;
     background-image: url('../assets/banner.jpg');
@@ -45,21 +55,25 @@
 .banner-content {
     position: relative;
     z-index: 2;
+    /* Ensure banner text aligns with the centered content below */
+    max-width: 1200px;
+    padding: 0 2rem;
+    will-change: transform;
+    margin-top: 3rem; /* Performance hint for the text parallax */
 }
 
-.banner-content h1 {
-    font-size: 3rem;
-    margin: 0;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+.home-banner-title {
+    /* Override the default font from the Shuffle component to match our design */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif !important;
+    text-transform: none !important; /* Prevent it from being all caps */
+    font-size: 3.3rem !important; /* Make it slightly larger */
+    font-weight: 700 !important; /* Make it bolder */
+    margin-bottom: 0.5rem; /* Add some space below the title */
+    text-shadow: 2px 3px 4px rgba(0,0,0,0.5); /* Add a shadow for depth */
 }
 
-.banner-content h2 {
-    font-size: 1.2rem;
-    font-weight: 400;
-    max-width: 600px;
-    margin: 0.5rem auto 0;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-}
 
 .controls {
   display: flex;

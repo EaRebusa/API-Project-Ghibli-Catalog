@@ -42,10 +42,9 @@
   border-left: 1px solid var(--border-color, #ddd);
 }
 
-.navbar-username {
-  font-size: 0.9rem;
-  color: var(--text-color-subtle);
-  font-weight: 500;
+.navbar-welcome-text .text-content {
+  /* Override default font-weight to match the navbar */
+  font-weight: 600;
 }
 
 .navbar-button {

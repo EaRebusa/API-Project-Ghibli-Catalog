@@ -18,12 +18,12 @@
   );
   background-size: var(--gh-size) var(--gh-size), 100% 100%;
   background-repeat: no-repeat;
-  background-position: -150% -150%, 0 0;
-  transition: background-position var(--gh-duration) ease;
+  background-position: -150% -150%, 0 0;  
 }
 
 .glare-hover-wrapper:hover .glare-overlay {
   background-position: 150% 150%, 0 0; /* move the glare across the full card */
+  transition: background-position var(--gh-duration) ease-in-out; /* Apply transition only on hover */
 }
 
 .glare-overlay.play-once {
@@ -31,6 +31,6 @@
 }
 
 .glare-overlay.play-once:hover {
-  transition: background-position var(--gh-duration) ease;
+  transition: background-position var(--gh-duration) ease-in-out;
   background-position: 150% 150%, 0 0;
 }

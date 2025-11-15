@@ -96,7 +96,7 @@ export function clapForFilm(filmId) {
 
 // --- Comment API ---
 export function getComments(filmId, page = 1) {
-    return apiCall(`/comments/${filmId}?page=${page}&limit=10`, {
+    return apiCall(`/comments/${filmId}?page=${page}&limit=5`, {
         // Default to an object that matches the new backend response
         defaultReturnValue: { comments: [], totalPages: 1, hasMore: false },
     });

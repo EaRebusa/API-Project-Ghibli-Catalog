@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import Modal from './Modal'; // Import the Modal component
+import GradientText from './GradientText'; // Import the new component
 import './Navbar.css';
 
 export default function Navbar() {
@@ -10,6 +11,12 @@ export default function Navbar() {
     const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
     const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+    // Define theme-aware colors for the gradient text
+    const gradientColors = {
+        light: ["#ff7e5f", "#ff4b2b", "#ff7e5f", "#ff4b2b", "#ff7e5f"], // A vibrant "sunrise" gradient for light mode
+        dark: ["#DA70D6", "#00BFFF", "#DA70D6", "#00BFFF", "#DA70D6"]
+    };
 
     const handleLogout = () => {
         logout();
@@ -26,12 +33,19 @@ export default function Navbar() {
             </div>
 
             <div className="navbar-right">
-                <Link to="/home">Home</Link>
-                <Link to="/about">About</Link>
+                <Link to="/home" className="gradient-hover">Home</Link>
+                <Link to="/about" className="gradient-hover">About</Link>
 
                 {isAuthenticated ? (
                     <div className="navbar-user-info">
-                        <span className="navbar-username">Welcome, {user.username}</span>
+                        <GradientText
+                            colors={gradientColors[theme]}
+                            animationSpeed={5}
+                            className="navbar-welcome-text"
+                        >
+                            {/* Ensure username is uppercase */}
+                            Welcome, {user?.username.toUpperCase()}
+                        </GradientText>
                         {/* This button now opens the confirmation modal */}
                         <button className="navbar-button" onClick={() => setIsLogoutModalOpen(true)}>
                             Logout
