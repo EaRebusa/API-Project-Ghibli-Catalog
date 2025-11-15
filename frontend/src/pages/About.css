@@ -93,12 +93,17 @@
   transform: scale(1.03);
 }
 
-/* Invert logo color ONLY in dark mode */
-.dark .about-image img,
-.dark .modal img {
-    filter: invert(1) brightness(1.2);
+/* --- NEW: Theme-aware logo inversion for main page and modal --- */
+
+/* In light mode, the main image is normal, but the modal image is inverted. */
+.modal-overlay .tilted-card-img {
+  filter: invert(1);
 }
 
+/* In dark mode, the main image is inverted, but the modal image is normal. */
+.dark .about-image img {
+  filter: invert(1);
+}
 
 @media (max-width: 768px) {
   .about-card {

@@ -19,10 +19,7 @@ export const ConfettiButton = React.forwardRef(
       if (e) e.stopPropagation(); // Stop propagation if clicked directly
       if (isConfettiActive) return;
 
-      setIsConfettiActive(true);
-      setTimeout(() => {
-        setIsConfettiActive(false);
-      }, 4000); // Confetti lasts for 4 seconds
+      setIsConfettiActive(true); // Start the confetti
     };
 
     return (
@@ -45,8 +42,10 @@ export const ConfettiButton = React.forwardRef(
               }}
               recycle={false}
               numberOfPieces={400} // More pieces for a full shower effect
-              gravity={0.12} // A gentle pull downwards
+              gravity={0.25} // A faster pull downwards
               initialVelocityY={10} // A small initial push
+              // --- FIX: Remove the component only after the animation is complete ---
+              onConfettiComplete={() => setIsConfettiActive(false)}
             />,
             document.body // Render directly into the body tag
           )}
