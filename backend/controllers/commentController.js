@@ -5,7 +5,7 @@ import asyncHandler from 'express-async-handler';
 export const getComments = asyncHandler(async (req, res) => {
     const { filmId } = req.params;
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10; // Default to 10 comments per page
+    const limit = parseInt(req.query.limit) || 5; // Default to 5 comments per page
     const skip = (page - 1) * limit;
 
     // Get the total count of comments for this film to calculate total pages
