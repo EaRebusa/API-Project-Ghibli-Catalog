@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Loader from "../components/Loader"; // Import the new Loader
 import Modal from "../components/Modal";
+import TiltedCard from "../components/TiltedCard";
 import "./About.css";
 
 const LOGO_SVG =
@@ -47,20 +48,25 @@ export default function About() {
           </div>
 
           <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-            <img
-              src={logoSrc}
-              alt="Studio Ghibli"
-              style={{ width: "100%", height: "auto" }}
-              onError={() => setLogoSrc("/logo.png")}
+            <TiltedCard
+              imageSrc={logoSrc}
+              altText="Studio Ghibli"
+              captionText="Studio Ghibli Logo"
+              containerWidth="500px"
+              containerHeight="500px"
+              imageWidth="500px"
+              imageHeight="500px"
+              scaleOnHover={1.05}
+              showMobileWarning={false}
             />
           </Modal>
 
           <div className="about-text">
             <p>
               This catalog showcases Studio Ghibli films with details such as
-              director, producer, release date, and Rotten Tomatoes score. It is
-              built with React and Express.js, fetching data from the Studio
-              Ghibli API via a backend proxy.
+              director, producer, release date, and Rotten Tomatoes score. It
+              is built with React and Express.js, fetching data from the
+              Studio Ghibli API via a backend proxy.
             </p>
             <p>
               Users can search by title, filter by director, and sort films by

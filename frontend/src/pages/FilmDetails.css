@@ -69,17 +69,11 @@
   width: inherit;
 }
 
-.film-poster img {
-  width: 250px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-  transition: transform 0.3s ease;
+.film-poster {
+  /* This container now just defines the space and click area */
   cursor: pointer;
-  margin-left: 20px;
-}
-
-.film-poster img:hover {
-  transform: scale(1.03);
+  width: 250px;
+  height: 375px;
 }
 
 .film-info {

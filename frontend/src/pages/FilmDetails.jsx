@@ -3,7 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Modal from "../components/Modal";
 import CommentSection from "../components/CommentSection";
+import { ConfettiButton } from "../components/ConfettiButton"; // Import the new component
 import Loader from "../components/Loader"; // Import the new Loader
+import TiltedCard from "../components/TiltedCard"; // Import the new TiltedCard
 import TextType from "../components/TextType"; // Import the new TextType component
 import FilmNavigation from "../components/FilmNavigation";
 import { useFilmData } from "../hooks/useFilmData"; // <-- Import the new hook
@@ -30,23 +32,22 @@ export default function FilmDetails() {
         nextFilm,
         setComments, // from useFilmData
         setClaps, // from useFilmData
-        commentPage,
-        resetComments,
-        loadMoreComments,
-        hasMoreComments,
-        isFetchingMore,
     } = useFilmData(id);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showRomanized, setShowRomanized] = useState(false);
     const [videoError, setVideoError] = useState(false);
     const [isClapping, setIsClapping] = useState(false);
+    const [confettiTrigger, setConfettiTrigger] = useState(0); // State to trigger confetti
 
     const handleClap = async () => {
         if (!isAuthenticated) {
             toast.error("Please log in to clap for films.");
             return;
         }
+        // Trigger the confetti animation
+        setConfettiTrigger(count => count + 1);
+
         setIsClapping(true);
         try {
             const updatedClaps = await clapForFilm(id);
@@ -95,19 +96,32 @@ export default function FilmDetails() {
                 </button>
 
                 <div className="film-hero">
-                    <div className="film-poster">
-                        <img
-                            src={film.image || "https://placehold.co/400x600?text=No+Poster"}
-                            alt={film.title}
-                            onClick={() => setIsModalOpen(true)}
+                    {/* Wrap the TiltedCard to make it clickable */}
+                    <div className="film-poster" onClick={() => setIsModalOpen(true)}>
+                        <TiltedCard
+                            imageSrc={film.image || "https://placehold.co/400x600?text=No+Poster"}
+                            altText={film.title}
+                            captionText={film.title}
+                            containerWidth="250px"
+                            containerHeight="375px"
+                            imageWidth="250px"
+                            imageHeight="375px"
+                            rotateAmplitude={8}
+                            scaleOnHover={1.05}
                         />
                     </div>
 
                     <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                        <img
-                            src={film.image || "https://placehold.co/400x600?text=No+Poster"}
-                            alt={film.title}
-                            style={{ width: "100%", height: "auto", borderRadius: "10px" }}
+                        <TiltedCard
+                            imageSrc={film.image || "https://placehold.co/400x600?text=No+Poster"}
+                            altText={film.title}
+                            captionText={film.title}
+                            containerWidth="400px"
+                            containerHeight="600px"
+                            imageWidth="400px"
+                            imageHeight="600px"
+                            scaleOnHover={1.05}
+                            showMobileWarning={false}
                         />
                     </Modal>
 
@@ -130,14 +144,18 @@ export default function FilmDetails() {
                             </button>
                         </div>
 
-                        <p><strong>Director:</strong> {film.director}</p>
-                        <p><strong>Producer:</strong> {film.producer}</p>
-                        <p><strong>Running Time:</strong> {film.running_time} min</p>
-                        <p><strong>🍅 Rotten Tomatoes:</strong> {film.rt_score}</p>
+                        <div className="meta-grid">
+                            <p><strong>Director:</strong></p><p>{film.director}</p>
+                            <p><strong>Producer:</strong></p><p>{film.producer}</p>
+                            <p><strong>Running Time:</strong></p><p>{film.running_time} min</p>
+                            <p><strong>🍅 Rotten Tomatoes:</strong></p><p>{film.rt_score}</p>
+                        </div>
                         <div className="like-section">
-                            <button onClick={handleClap} className="like-button" disabled={isClapping || !isAuthenticated} title={!isAuthenticated ? "Log in to clap for films" : ""}>
-                                👏 Clap
-                            </button>
+                            <ConfettiButton manualTrigger={confettiTrigger}>
+                                <button onClick={handleClap} className="like-button" disabled={isClapping || !isAuthenticated} title={!isAuthenticated ? "Log in to clap for films" : ""}>
+                                    👏 Clap
+                                </button>
+                            </ConfettiButton>
                             <span>{claps} claps</span>
                         </div>
                     </div>
@@ -161,11 +179,6 @@ export default function FilmDetails() {
                 filmId={id}
                 comments={comments}
                 setComments={setComments}
-                loadMoreComments={loadMoreComments}
-                commentPage={commentPage}
-                resetComments={resetComments}
-                hasMore={hasMoreComments}
-                isFetchingMore={isFetchingMore}
             />
 
             <FilmNavigation prevFilm={prevFilm} nextFilm={nextFilm} />

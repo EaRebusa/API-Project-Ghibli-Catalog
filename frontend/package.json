@@ -12,6 +12,7 @@
     "gsap": "^3.13.0",
     "ogl": "^1.0.11",
     "react": "^19.1.1",
+    "react-confetti": "^6.4.0",
     "react-dom": "^19.1.1",
     "react-hot-toast": "^2.6.0",
     "react-loading-indicators": "^1.0.1",

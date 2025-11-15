@@ -18,9 +18,8 @@
 
 .modal-content {
   position: relative;
-  background: #fff;
+  background: transparent; /* Remove default background */
   border-radius: 12px;
-  padding: 0;               
   max-width: 90vw;          
   max-height: 90vh;         
   display: flex;

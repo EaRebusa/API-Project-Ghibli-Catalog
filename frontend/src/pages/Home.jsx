@@ -3,8 +3,9 @@ import FilmCard from "../components/FilmCard";
 import { useTheme } from "../context/ThemeContext";
 import Modal from "../components/Modal";
 import Loader from "../components/Loader"; // Import the new Loader
+import TiltedCard from "../components/TiltedCard"; // Import TiltedCard
 import Shuffle from "../components/Shuffle"; // Import the new Shuffle component
-import { getFilms, getDirectors, getYears } from "../api";
+import { getFilms } from "../api";
 import "./Home.css";
 
 export default function Home() {
@@ -146,10 +147,16 @@ export default function Home() {
             </div>
 
             <Modal isOpen={isBannerModalOpen} onClose={() => setIsBannerModalOpen(false)}>
-                <img
-                    src={require('../assets/banner.jpg')}
-                    alt="Ghibli Banner"
-                    style={{ width: "100%", height: "auto", borderRadius: "10px" }}
+                <TiltedCard
+                    imageSrc={require('../assets/banner.jpg')}
+                    altText="Ghibli Banner"
+                    captionText="Welcome to the Ghibli Catalog"
+                    containerWidth="80vw"
+                    containerHeight="45vw"
+                    imageWidth="80vw"
+                    imageHeight="45vw"
+                    scaleOnHover={1.02}
+                    showMobileWarning={false}
                 />
             </Modal>
 

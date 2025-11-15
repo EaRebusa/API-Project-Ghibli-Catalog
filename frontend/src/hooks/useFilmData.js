@@ -7,9 +7,6 @@ export function useFilmData(id) {
     const [films, setFilms] = useState([]);
     const [comments, setComments] = useState([]);
     const [claps, setClaps] = useState(0);
-    const [commentPage, setCommentPage] = useState(1);
-    const [hasMoreComments, setHasMoreComments] = useState(false);
-    const [isFetchingMore, setIsFetchingMore] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -19,18 +16,20 @@ export function useFilmData(id) {
                 setLoading(true);
                 setError(null);
 
-                // Fetch all data in parallel for speed
-                const [single, all, commentsResponse, likesData] = await Promise.all([
+                // Fetch primary film data first
+                const [single, all, likesData] = await Promise.all([
                     getFilmById(id),
                     getFilms(),
-                    getComments(id, 1), // Fetch the first page of comments
                     getClaps(id)
                 ]);
 
+                // Fetch comments separately to ensure it's always an array
+                const commentsData = await getComments(id);
+
                 setFilm(single);
                 setFilms(all);
-                setComments(commentsResponse.comments);
-                setHasMoreComments(commentsResponse.hasMore);
+                // Ensure that comments is always an array, even if the API call fails
+                setComments(Array.isArray(commentsData) ? commentsData : []);
                 setClaps(likesData.likes);
 
             } catch (err) {
@@ -43,37 +42,6 @@ export function useFilmData(id) {
 
         fetchFilmData();
     }, [id]); // This effect re-runs whenever the film ID changes
-
-    const resetComments = async () => {
-        // Re-use the fetching state to show a loading indicator
-        setIsFetchingMore(true);
-        try {
-            const commentsResponse = await getComments(id, 1); // Fetch page 1
-            setComments(commentsResponse.comments);
-            setHasMoreComments(commentsResponse.hasMore);
-            setCommentPage(1); // Reset the page counter
-        } catch (err) {
-            console.error("Failed to reset comments:", err);
-            toast.error("Could not reload comments.");
-        } finally {
-            setIsFetchingMore(false);
-        }
-    };
-
-    const loadMoreComments = async () => {
-        if (isFetchingMore || !hasMoreComments) return;
-
-        setIsFetchingMore(true);
-        const nextPage = commentPage + 1;
-        const newCommentsResponse = await getComments(id, nextPage);
-
-        if (newCommentsResponse.comments.length > 0) {
-            setComments(prev => [...prev, ...newCommentsResponse.comments]);
-            setCommentPage(nextPage);
-            setHasMoreComments(newCommentsResponse.hasMore);
-        }
-        setIsFetchingMore(false);
-    };
 
     // This logic for finding the next/prev film now lives inside the hook
     const { prevFilm, nextFilm } = useMemo(() => {
@@ -96,10 +64,5 @@ export function useFilmData(id) {
         nextFilm,
         setComments, // Export for optimistic updates
         setClaps, // We export the setter so the component can update the clap count
-        commentPage,
-        resetComments,
-        loadMoreComments,
-        hasMoreComments,
-        isFetchingMore,
     };
 }

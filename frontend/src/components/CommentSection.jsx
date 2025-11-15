@@ -9,11 +9,6 @@ export default function CommentSection({
     filmId,
     comments, // <-- This was missing
     setComments,
-    loadMoreComments,
-    commentPage,
-    resetComments,
-    hasMore,
-    isFetchingMore,
 }) {
     const { isAuthenticated, user } = useAuth();
     const [commentText, setCommentText] = useState('');
@@ -44,7 +39,7 @@ export default function CommentSection({
 
         try {
             // 3. Send the actual request to the server.
-            const savedComment = await postComment(filmId, { comment: optimisticComment.comment });
+            const savedComment = await postComment(filmId, { comment: commentText });
 
             if (savedComment) {
                 // 4. If successful, replace the temporary comment with the real one from the server.
@@ -105,19 +100,6 @@ export default function CommentSection({
             <div className="comment-list-wrapper">
                 <AnimatedList items={commentItems} showGradients={true} enableArrowNavigation={false} />
                 {comments.length === 0 && <p>Be the first to comment!</p>}
-            </div>
-
-            <div className="comment-pagination-controls">
-                {commentPage > 1 && (
-                    <button className="show-less-button" onClick={resetComments} disabled={isFetchingMore}>
-                        Show Less
-                    </button>
-                )}
-                {hasMore && (
-                    <button className="load-more-button" onClick={loadMoreComments} disabled={isFetchingMore}>
-                        {isFetchingMore ? 'Loading...' : 'Load More Comments'}
-                    </button>
-                )}
             </div>
         </div>
     );

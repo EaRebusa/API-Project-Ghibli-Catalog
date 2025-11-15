@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import GlareHover from "./GlareHover";
 import { getClaps, clapForFilm } from "../api";
+import { ConfettiButton } from "./ConfettiButton"; // Import the new component
 import { useAuth } from "../context/AuthContext"; // <-- 1. IMPORT
 import { toast } from "react-hot-toast";
 import "./FilmCard.css";
@@ -9,6 +10,7 @@ import "./FilmCard.css";
 export default function FilmCard({ film, style }) {
     const navigate = useNavigate();
     const [clapCount, setClapCount] = useState(0);
+    const [confettiTrigger, setConfettiTrigger] = useState(0); // State to trigger confetti
     const { isAuthenticated } = useAuth(); // <-- 2. GET AUTH STATE
 
     useEffect(() => {
@@ -27,6 +29,9 @@ export default function FilmCard({ film, style }) {
             toast.error("Please log in to clap for films.");
             return;
         }
+
+        // Trigger the confetti animation
+        setConfettiTrigger(count => count + 1);
 
         setClapCount(currentCount => currentCount + 1);
 
@@ -59,9 +64,11 @@ export default function FilmCard({ film, style }) {
                     {/* 4. ONLY RENDER THIS SECTION IF LOGGED IN */}
                     {isAuthenticated && (
                         <div className="like-section" onClick={(e) => e.stopPropagation()}>
-                            <button className="like-button" onClick={handleClap}>
-                                👏 Clap
-                            </button>
+                            <ConfettiButton manualTrigger={confettiTrigger}>
+                                <button className="like-button" onClick={handleClap}>
+                                    👏 Clap
+                                </button>
+                            </ConfettiButton>
                             <span>{clapCount} claps</span>
                         </div>
                     )}
