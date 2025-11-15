@@ -49,9 +49,9 @@ export async function getFilmById(id) {
 }
 
 export async function getDirectors() {
-  return handleFetch(`${API_BASE}/directors`);
+  return handleFetch(`${API_BASE}/films/directors`);
 }
 
 export async function getYears() {
-  return handleFetch(`${API_BASE}/years`);
+  return handleFetch(`${API_BASE}/films/years`);
 }

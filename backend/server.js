@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import filmRoutes from './routes/films.js';
 import likeRoutes from './routes/likes.js';
 import commentRoutes from './routes/comments.js';
+import seedDatabase from './seed.js';
 
 dotenv.config();
 
@@ -12,7 +13,10 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log("MongoDB connected successfully."))
+    .then(() => {
+        console.log("MongoDB connected successfully. (Local)");
+        seedDatabase();
+    })
     .catch(err => console.error("MongoDB connection error:", err));
 
 app.use(cors());

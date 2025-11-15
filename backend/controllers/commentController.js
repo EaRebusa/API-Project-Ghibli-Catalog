@@ -22,8 +22,8 @@ export async function postComment(req, res) {
             comment
         });
 
-        await newComment.save();
-        res.status(201).json(newComment);
+        const savedComment = await newComment.save();
+        res.status(201).json(savedComment);
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Failed to post comment" });

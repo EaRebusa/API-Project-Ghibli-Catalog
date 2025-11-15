@@ -25,7 +25,12 @@ export default function FilmDetails() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     // --- END NEW COMMENT STATE ---
 
+    // --- NEW LIKE STATE ---
+    const [likes, setLikes] = useState(0);
+    // --- END NEW LIKE STATE ---
+
     useEffect(() => {
+        console.log("useEffect triggered");
         setLoading(true);
         Promise.all([
             // --- 1. UPDATED ---
@@ -33,14 +38,39 @@ export default function FilmDetails() {
             // --- 2. UPDATED ---
             fetch(`${process.env.REACT_APP_API_URL}/api/films`).then((res) => res.json()),
             // --- 3. UPDATED ---
-            fetch(`${process.env.REACT_APP_API_URL}/api/comments/${id}`).then((res) => res.json())
-        ]).then(([single, all, commentsData]) => {
+            fetch(`${process.env.REACT_APP_API_URL}/api/comments/${id}`).then((res) => res.json()),
+            // --- 4. NEW ---
+            fetch(`${process.env.REACT_APP_API_URL}/api/likes/${id}`).then((res) => res.json())
+        ]).then(([single, all, commentsData, likesData]) => {
+            console.log("Data fetched:", { single, all, commentsData, likesData });
             setFilm(single);
             setFilms(all);
             setComments(commentsData);
+            // --- 5. NEW ---
+            setLikes(likesData.likes);
+            console.log("Likes state set to:", likesData.likes);
             setLoading(false);
         });
     }, [id]);
+
+    // --- NEW LIKE HANDLER ---
+    const handleLike = async () => {
+        console.log("handleLike called");
+        try {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/likes/${id}/like`, {
+                method: "POST",
+            });
+            if (!res.ok) throw new Error("Failed to like the film");
+            const updatedLikes = await res.json();
+            console.log("Like response received:", updatedLikes);
+            setLikes(updatedLikes.likes);
+            console.log("Likes state updated to:", updatedLikes.likes);
+        } catch (err) {
+            console.error(err);
+            alert("Failed to like the film. Please try again.");
+        }
+    };
+    // --- END NEW LIKE HANDLER ---
 
     // --- NEW COMMENT SUBMIT HANDLER ---
     const handleSubmitComment = async (e) => {
@@ -153,6 +183,14 @@ export default function FilmDetails() {
                         <p><strong>Producer:</strong> {film.producer}</p>
                         <p><strong>Running Time:</strong> {film.running_time} min</p>
                         <p><strong>🍅 Rotten Tomatoes:</strong> {film.rt_score}</p>
+                        {/* --- NEW LIKE BUTTON --- */}
+                        <div className="like-section">
+                            <button onClick={handleLike} className="like-button">
+                                ❤️ Like
+                            </button>
+                            <span>{likes} likes</span>
+                        </div>
+                        {/* --- END NEW LIKE BUTTON --- */}
                     </div>
                 </div>
             </div>

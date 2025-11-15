@@ -26,7 +26,7 @@ export default function FilmCard({ film, style }) {
         setLikeCount(currentCount => currentCount + 1);
 
         // Send the "like" to the backend
-        fetch(`${process.env.REACT_APP_API_URL}/api/films/${film.id}/like`,{
+        fetch(`${process.env.REACT_APP_API_URL}/api/likes/${film.id}/like`,{
             method: "POST",
         })
             .then((res) => res.json())

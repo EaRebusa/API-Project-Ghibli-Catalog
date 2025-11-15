@@ -1,99 +1,71 @@
-import fetch from "node-fetch";
+import Film from '../models/Film.js';
 
-const GHIBLI_API = "https://ghibliapi.vercel.app/films";
-
-// --- CACHE VARIABLES ---
-let filmCache = null;
-let cacheTimestamp = 0;
-const CACHE_DURATION_MS = 60 * 60 * 1000; // 60 minutes
-
-// --- HELPER FUNCTION ---
-async function getAllFilms() {
-    const now = new Date().getTime();
-    if (now - cacheTimestamp > CACHE_DURATION_MS || !filmCache) {
-        console.log("CACHE MISS: Fetching new data from Ghibli API...");
-        const response = await fetch(GHIBLI_API);
-        const films = await response.json();
-        filmCache = films;
-        cacheTimestamp = now;
-    } else {
-        console.log("CACHE HIT: Serving data from cache.");
-    }
-    return filmCache;
-}
-
-export async function getFilms(req, res) {
+// Get all films
+export const getFilms = async (req, res) => {
     try {
         const { search, sort, director, year, order = 'asc' } = req.query;
-        const films = await getAllFilms();
-        let processedFilms = [...films];
 
+        // 1. Build the filter query object for Mongoose
+        const filterQuery = {};
         if (search) {
-            processedFilms = processedFilms.filter(film =>
-                film.title.toLowerCase().includes(search.toLowerCase())
-            );
+            // Use a case-insensitive regex for searching the title
+            filterQuery.title = { $regex: search, $options: 'i' };
         }
         if (director) {
-            processedFilms = processedFilms.filter(film =>
-                film.director === director
-            );
+            filterQuery.director = director;
         }
         if (year) {
-            processedFilms = processedFilms.filter(film =>
-                film.release_date === year
-            );
+            filterQuery.release_date = year;
         }
+
+        // 2. Build the sort object for Mongoose
+        const sortQuery = {};
         if (sort) {
-            processedFilms.sort((a, b) => {
-                const valA = a[sort];
-                const valB = b[sort];
-                const comparison = valA.localeCompare(valB, undefined, { numeric: true });
-                return order === 'desc' ? -comparison : comparison;
-            });
+            // Mongoose sort order is 1 for 'asc' and -1 for 'desc'
+            sortQuery[sort] = order === 'desc' ? -1 : 1;
+        } else {
+            // Default sort by release date if no sort param is given
+            sortQuery['release_date'] = 1;
         }
 
-        res.json(processedFilms);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Failed to fetch films" });
+        // 3. Execute the query with filters and sorting
+        const films = await Film.find(filterQuery).sort(sortQuery);
+        res.json(films);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to fetch films', error });
     }
-}
+};
 
-export async function getFilmById(req, res) {
+// Get a single film by its ID
+export const getFilmById = async (req, res) => {
     try {
-        const { id } = req.params;
-        const films = await getAllFilms();
-        const film = films.find(f => f.id === id);
-
-        if (!film) {
-            return res.status(404).json({ error: "Film not found" });
+        const film = await Film.findOne({ id: req.params.id });
+        if (film) {
+            res.json(film);
+        } else {
+            res.status(404).json({ error: 'Film not found' });
         }
-
-        res.json(film);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Failed to fetch film" });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch film' });
     }
-}
+};
 
-export async function getDirectors(req, res) {
+// Get a unique list of directors
+export const getDirectors = async (req, res) => {
     try {
-        const films = await getAllFilms();
-        const directors = Array.from(new Set(films.map(f => f.director)));
+        const directors = await Film.distinct('director');
         res.json(directors.sort());
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Failed to fetch directors" });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch directors' });
     }
-}
+};
 
-export async function getYears(req, res) {
+// Get a unique list of release years
+export const getYears = async (req, res) => {
     try {
-        const films = await getAllFilms();
-        const years = Array.from(new Set(films.map(f => f.release_date)));
-        res.json(years.sort((a, b) => b - a)); // Sort newest to oldest
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Failed to fetch years" });
+        const years = await Film.distinct('release_date'); // Sort newest to oldest
+        res.json(years.sort((a, b) => b - a));
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch years' });
     }
-}
+};
