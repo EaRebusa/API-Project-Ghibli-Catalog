@@ -15,6 +15,15 @@ async function apiCall(endpoint, { method = 'GET', body = null, defaultReturnVal
         headers: {},
     };
 
+    // --- NEW: ADD AUTH TOKEN ---
+    // Get the token from localStorage
+    const token = localStorage.getItem('ghibli-token');
+    if (token) {
+        // If it exists, add it to the Authorization header
+        config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    // --- END OF NEW LOGIC ---
+
     if (body) {
         config.body = JSON.stringify(body);
         config.headers['Content-Type'] = 'application/json';
@@ -23,20 +32,29 @@ async function apiCall(endpoint, { method = 'GET', body = null, defaultReturnVal
     try {
         const res = await fetch(`${API_BASE}${endpoint}`, config);
 
-        // If the response is not OK, log the error and return the default value.
         if (!res.ok) {
             console.error(`API call to ${endpoint} failed with status ${res.status}`);
+
+            // --- NEW: Handle 401 Unauthorized ---
+            // If the server rejects our token, log the user out.
+            if (res.status === 401) {
+                console.error("Token is invalid or expired. Logging out.");
+                // This is a "hard" logout.
+                localStorage.removeItem('ghibli-token');
+                // Reload the page to reset the app's state
+                window.location.reload();
+            }
+            // --- END 401 HANDLING ---
+
             try {
                 const errorData = await res.json();
                 console.error('Error details:', errorData);
             } catch (e) {
-                // The error response might not be JSON.
                 console.error('Could not parse error response as JSON.');
             }
             return defaultReturnValue;
         }
 
-        // Handle responses with no content.
         const contentLength = res.headers.get("content-length");
         if (contentLength === "0") {
             return defaultReturnValue;
@@ -48,6 +66,9 @@ async function apiCall(endpoint, { method = 'GET', body = null, defaultReturnVal
         return defaultReturnValue;
     }
 }
+
+// --- (All your other functions like getFilms, getLikes, etc. are unchanged) ---
+// --- They will now AUTOMATICALLY send the token! ---
 
 // --- Film API ---
 export function getFilms(params) {
@@ -69,7 +90,6 @@ export function getYears() {
 
 // --- Like API ---
 export function getLikes(filmId) {
-    // The default like object if not found is { likes: 0 }
     return apiCall(`/likes/${filmId}`, { defaultReturnValue: { likes: 0 } });
 }
 

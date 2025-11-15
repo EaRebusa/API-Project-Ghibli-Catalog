@@ -5,10 +5,10 @@ const CommentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    // Change 'author' to be a reference to the User model.
     author: {
-        type: String,
-        required: true,
-        default: "Anonymous"
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User' // This should match the name you used when creating the User model
     },
     comment: {
         type: String,

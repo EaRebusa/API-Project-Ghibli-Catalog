@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FourSquare } from "react-loading-indicators";
+import { useAuth } from "../context/AuthContext";
 import Modal from "../components/Modal";
-import { getFilmById, getFilms, getComments, postComment, getLikes, likeFilm } from "../api";
+import CommentSection from "../components/CommentSection";
+import FilmNavigation from "../components/FilmNavigation";
+import { getFilmById, getFilms, getComments, likeFilm, getLikes } from "../api";
 import "./FilmDetails.css";
-import "./CommentSection.css";
 
 const BG_VIDEO = "/banner.mp4";
 const BG_IMAGE = "https://cdn.pfps.gg/banners/3187-studio-ghibli.png";
@@ -12,64 +14,74 @@ const BG_IMAGE = "https://cdn.pfps.gg/banners/3187-studio-ghibli.png";
 export default function FilmDetails() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { isAuthenticated } = useAuth();
+
     const [film, setFilm] = useState(null);
     const [films, setFilms] = useState([]);
+    const [comments, setComments] = useState([]);
+    const [likes, setLikes] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showRomanized, setShowRomanized] = useState(false);
     const [videoError, setVideoError] = useState(false);
+    const [isLiking, setIsLiking] = useState(false);
 
-    const [comments, setComments] = useState([]);
-    const [commentAuthor, setCommentAuthor] = useState("Anonymous");
-    const [commentText, setCommentText] = useState("");
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
-    const [likes, setLikes] = useState(0);
+    // Memoize finding the next/prev films to avoid re-calculating on every render
+    const { prevFilm, nextFilm } = useMemo(() => {
+        if (!film || films.length === 0) return { prevFilm: null, nextFilm: null };
+        const index = films.findIndex((f) => f.id === film.id);
+        if (index === -1) return { prevFilm: null, nextFilm: null };
+        const prev = index > 0 ? films[index - 1] : null;
+        const next = index < films.length - 1 ? films[index + 1] : null;
+        return { prevFilm: prev, nextFilm: next };
+    }, [film, films]);
 
     useEffect(() => {
-        setLoading(true);
-        Promise.all([
-            getFilmById(id),
-            getFilms(),
-            getComments(id),
-            getLikes(id)
-        ]).then(([single, all, commentsData, likesData]) => {
-            setFilm(single);
-            setFilms(all);
-            setComments(commentsData);
-            setLikes(likesData.likes);
-            setLoading(false);
-        });
+        const fetchFilmData = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+                // Fetch all data in parallel
+                const [single, all, commentsData, likesData] = await Promise.all([
+                    getFilmById(id),
+                    getFilms(),
+                    getComments(id),
+                    getLikes(id)
+                ]);
+                setFilm(single);
+                setFilms(all);
+                setComments(commentsData);
+                setLikes(likesData.likes);
+            } catch (err) {
+                console.error("Failed to fetch film details:", err);
+                setError("Could not load film data. Please try again later.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchFilmData();
     }, [id]);
 
     const handleLike = async () => {
-        const updatedLikes = await likeFilm(id);
-        if (updatedLikes) {
-            setLikes(updatedLikes.likes);
-        } else {
+        if (!isAuthenticated) {
+            alert("Please log in to like a film.");
+            return;
+        }
+        setIsLiking(true);
+        try {
+            const updatedLikes = await likeFilm(id);
+            if (updatedLikes) {
+                setLikes(updatedLikes.likes);
+            }
+        } catch (error) {
+            console.error("Failed to like film:", error);
             alert("Failed to like the film. Please try again.");
+        } finally {
+            setIsLiking(false);
         }
-    };
-
-    const handleSubmitComment = async (e) => {
-        e.preventDefault();
-        if (!commentText.trim()) return;
-
-        setIsSubmitting(true);
-        const newCommentData = {
-            author: commentAuthor || "Anonymous",
-            comment: commentText,
-        };
-
-        const savedComment = await postComment(id, newCommentData);
-
-        if (savedComment) {
-            setComments(prevComments => [savedComment, ...prevComments]);
-            setCommentText("");
-        } else {
-            alert("Failed to submit comment. Please try again.");
-        }
-        setIsSubmitting(false);
     };
 
     if (loading) {
@@ -80,9 +92,9 @@ export default function FilmDetails() {
         );
     }
 
-    const index = films.findIndex((f) => f.id === film.id);
-    const prevFilm = index > 0 ? films[index - 1] : null;
-    const nextFilm = index < films.length - 1 ? films[index + 1] : null;
+    if (error) {
+        return <div className="loading-container"><p>{error}</p></div>;
+    }
 
     return (
         <div className="film-details-container" key={film.id}>
@@ -95,9 +107,9 @@ export default function FilmDetails() {
                         playsInline
                         className="film-backdrop-video"
                         onError={() => setVideoError(true)}
+                        key={BG_VIDEO} // Add key to force re-render if source changes
                     >
                         <source src={BG_VIDEO} type="video/mp4" />
-                        Your browser does not support the video tag.
                     </video>
                 ) : (
                     <img src={BG_IMAGE} alt="Backdrop" className="film-backdrop-image" />
@@ -148,7 +160,7 @@ export default function FilmDetails() {
                         <p><strong>Running Time:</strong> {film.running_time} min</p>
                         <p><strong>🍅 Rotten Tomatoes:</strong> {film.rt_score}</p>
                         <div className="like-section">
-                            <button onClick={handleLike} className="like-button">
+                            <button onClick={handleLike} className="like-button" disabled={isLiking || !isAuthenticated} title={!isAuthenticated ? "Log in to like films" : ""}>
                                 ❤️ Like
                             </button>
                             <span>{likes} likes</span>
@@ -162,67 +174,9 @@ export default function FilmDetails() {
                 <p>{film.description}</p>
             </div>
 
-            <div className="comments-section">
-                <h2>Comments ({comments.length})</h2>
+            <CommentSection filmId={id} initialComments={comments} />
 
-                <form className="comment-form" onSubmit={handleSubmitComment}>
-                    <div className="form-group">
-                        <label htmlFor="author">Name</label>
-                        <input
-                            type="text"
-                            id="author"
-                            value={commentAuthor}
-                            onChange={(e) => setCommentAuthor(e.target.value)}
-                            placeholder="Your name (defaults to Anonymous)"
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="comment">Comment</label>
-                        <textarea
-                            id="comment"
-                            value={commentText}
-                            onChange={(e) => setCommentText(e.target.value)}
-                            placeholder="Write your comment here..."
-                            required
-                        />
-                    </div>
-                    <button type="submit" disabled={isSubmitting}>
-                        {isSubmitting ? "Posting..." : "Post Comment"}
-                    </button>
-                </form>
-
-                <div className="comment-list">
-                    {comments.map((comment) => (
-                        <div key={comment._id} className="comment-card">
-                            <div className="comment-header">
-                                <strong>{comment.author}</strong>
-                                <span className="comment-date">
-                                    {new Date(comment.createdAt).toLocaleString()}
-                                </span>
-                            </div>
-                            <p>{comment.comment}</p>
-                        </div>
-                    ))}
-                    {comments.length === 0 && !loading && (
-                        <p>Be the first to comment!</p>
-                    )}
-                </div>
-            </div>
-
-            <div className="film-nav">
-                {prevFilm && (
-                    <div className="film-nav-card left" onClick={() => navigate(`/film/${prevFilm.id}`)}>
-                        <img src={prevFilm.image || "https://placehold.co/80x120"} alt={prevFilm.title} />
-                        <span>← {prevFilm.title}</span>
-                    </div>
-                )}
-                {nextFilm && (
-                    <div className="film-nav-card right" onClick={() => navigate(`/film/${nextFilm.id}`)}>
-                        <span>{nextFilm.title} →</span>
-                        <img src={nextFilm.image || "https://placehold.co/80x120"} alt={nextFilm.title} />
-                    </div>
-                )}
-            </div>
+            <FilmNavigation prevFilm={prevFilm} nextFilm={nextFilm} />
         </div>
     );
 }

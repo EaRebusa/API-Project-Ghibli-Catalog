@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import filmRoutes from './routes/films.js';
 import likeRoutes from './routes/likes.js';
 import commentRoutes from './routes/comments.js';
+import authRoutes from './routes/auth.js'; // <-- ADDED THIS
 import seedDatabase from './seed.js';
 
 dotenv.config();
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use('/api/films', filmRoutes);
 app.use('/api/likes', likeRoutes);
 app.use('/api/comments', commentRoutes);
+app.use('/api/auth', authRoutes); // <-- ADDED THIS
 
 app.listen(PORT, () => {
     console.log(`Backend running on http://localhost:${PORT}`);
