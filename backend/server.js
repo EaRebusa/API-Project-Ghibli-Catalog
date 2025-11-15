@@ -6,6 +6,7 @@ import filmRoutes from './routes/films.js';
 import likeRoutes from './routes/likes.js';
 import commentRoutes from './routes/comments.js';
 import authRoutes from './routes/auth.js'; // <-- ADDED THIS
+import { errorHandler } from './middleware/errorMiddleware.js';
 import seedDatabase from './seed.js';
 
 dotenv.config();
@@ -27,6 +28,9 @@ app.use('/api/films', filmRoutes);
 app.use('/api/likes', likeRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/auth', authRoutes); // <-- ADDED THIS
+
+// Centralized Error Handler - MUST be last
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     console.log(`Backend running on http://localhost:${PORT}`);
