@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import FilmCard from "../components/FilmCard";
 import { useTheme } from "../context/ThemeContext";
-import { FourSquare } from "react-loading-indicators";
-import Modal from "../components/Modal"; // Import the Modal component
+import Modal from "../components/Modal";
+import Loader from "../components/Loader"; // Import the new Loader
 import { getFilms, getDirectors, getYears } from "../api";
 import "./Home.css";
 
@@ -113,11 +113,7 @@ export default function Home() {
     }, [debouncedSearch, directorFilter, yearFilter, sortOption, allFilms]);
 
     if (loading) {
-        return (
-            <div className="loading-container">
-                <FourSquare color="#5A4E9D" size={40} />
-            </div>
-        );
+        return <Loader />;
     }
 
     return (
@@ -128,8 +124,8 @@ export default function Home() {
                 style={{ backgroundPositionY: `${30 + scrollPosition * 0.1}%` }}
             >
                 <div className="banner-content">
-                    <h1>Welcome!</h1>
-                    <h2>Explore the timeless magic of Studio Ghibli. Explore now.</h2>
+                    <h1>Welcome.</h1>
+                    <h2>Explore the timeless magic of Studio Ghibli. Millions of films to discover. Explore now.</h2>
                 </div>
             </div>
 
@@ -177,10 +173,10 @@ export default function Home() {
                     className="animated-dropdown"
                 >
                     <option value="">Sort By</option>
-                    <option value="year-desc">Year ↓</option>
-                    <option value="year-asc">Year ↑</option>
-                    <option value="score-desc">Score ↓</option>
-                    <option value="score-asc">Score ↑</option>
+                    <option value="release_date-desc">Year ↓</option>
+                    <option value="release_date-asc">Year ↑</option>
+                    <option value="rt_score-desc">Score ↓</option>
+                    <option value="rt_score-asc">Score ↑</option>
                 </select>
             </div>
 

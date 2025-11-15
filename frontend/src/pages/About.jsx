@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FourSquare } from "react-loading-indicators";
+import Loader from "../components/Loader"; // Import the new Loader
 import Modal from "../components/Modal";
 import "./About.css";
 
@@ -15,16 +15,12 @@ export default function About() {
   const [logoSrc, setLogoSrc] = useState(LOGO_SVG);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 500);
+    const timer = setTimeout(() => setLoading(false), 1500); // Increased delay to 1.5 seconds
     return () => clearTimeout(timer);
   }, []);
 
   if (loading) {
-    return (
-      <div className="loading-container">
-        <FourSquare color="#5A4E9D" size={40} />
-      </div>
-    );
+    return <Loader />;
   }
 
   return (

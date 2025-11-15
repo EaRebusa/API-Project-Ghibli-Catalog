@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FourSquare } from "react-loading-indicators";
 import { useAuth } from "../context/AuthContext";
 import Modal from "../components/Modal";
 import CommentSection from "../components/CommentSection";
+import Loader from "../components/Loader"; // Import the new Loader
 import FilmNavigation from "../components/FilmNavigation";
 import { useFilmData } from "../hooks/useFilmData"; // <-- Import the new hook
 import { clapForFilm } from '../api';
@@ -61,11 +61,7 @@ export default function FilmDetails() {
     };
 
     if (loading) {
-        return (
-            <div className="loading-container">
-                <FourSquare color="#5A4E9D" size={40} />
-            </div>
-        );
+        return <Loader />;
     }
 
     if (error) {
