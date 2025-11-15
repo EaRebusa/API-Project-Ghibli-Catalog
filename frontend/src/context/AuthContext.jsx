@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode'; // We need to install this!
+import { jwtDecode } from 'jwt-decode';
 
 // 1. Create the context
 const AuthContext = createContext();
@@ -37,6 +37,18 @@ export const AuthProvider = ({ children }) => {
             setLoading(false);
         }
     }, []);
+
+    // Listen for the custom 'auth-error' event dispatched from our api.js
+    useEffect(() => {
+        const handleAuthError = () => {
+            console.log("Authentication error detected. Logging out.");
+            logout();
+        };
+
+        window.addEventListener('auth-error', handleAuthError);
+
+        return () => window.removeEventListener('auth-error', handleAuthError);
+    }, []); // The empty dependency array ensures this runs only once.
 
     const login = (token) => {
         try {

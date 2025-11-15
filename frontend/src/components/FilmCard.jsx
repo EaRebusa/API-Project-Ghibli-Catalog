@@ -1,37 +1,38 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import GlareHover from "./GlareHover";
-import { getLikes, likeFilm } from "../api";
+import { getClaps, clapForFilm } from "../api";
 import { useAuth } from "../context/AuthContext"; // <-- 1. IMPORT
+import { toast } from "react-hot-toast";
 import "./FilmCard.css";
 
 export default function FilmCard({ film, style }) {
     const navigate = useNavigate();
-    const [likeCount, setLikeCount] = useState(0);
+    const [clapCount, setClapCount] = useState(0);
     const { isAuthenticated } = useAuth(); // <-- 2. GET AUTH STATE
 
     useEffect(() => {
-        getLikes(film.id).then(data => {
+        getClaps(film.id).then(data => {
             if (data) {
-                setLikeCount(data.likes);
+                setClapCount(data.likes);
             }
         });
     }, [film.id]);
 
-    const handleLike = (e) => {
+    const handleClap = (e) => {
         e.stopPropagation();
 
         // 3. Double-check they are authenticated before trying to like
         if (!isAuthenticated) {
-            alert("Please log in to like films."); // Or navigate to /login
+            toast.error("Please log in to clap for films.");
             return;
         }
 
-        setLikeCount(currentCount => currentCount + 1);
+        setClapCount(currentCount => currentCount + 1);
 
-        likeFilm(film.id).then(updatedLikes => {
-            if (!updatedLikes) {
-                setLikeCount(currentCount => currentCount - 1);
+        clapForFilm(film.id).then(updatedClaps => {
+            if (updatedClaps) {
+                setClapCount(updatedClaps.likes);
             }
         });
     };
@@ -53,16 +54,16 @@ export default function FilmCard({ film, style }) {
                     {/* 4. ONLY RENDER THIS SECTION IF LOGGED IN */}
                     {isAuthenticated && (
                         <div className="like-section" onClick={(e) => e.stopPropagation()}>
-                            <button className="like-button" onClick={handleLike}>
-                                ❤️ Like
+                            <button className="like-button" onClick={handleClap}>
+                                👏 Clap
                             </button>
-                            <span>{likeCount} likes</span>
+                            <span>{clapCount} claps</span>
                         </div>
                     )}
                     {/* 5. GUESTS WILL SEE NOTHING, OR JUST THE COUNT (optional) */}
                     {!isAuthenticated && (
                         <div className="like-section-guest">
-                            <span>{likeCount} likes</span>
+                            <span>{clapCount} claps</span>
                         </div>
                     )}
                 </div>

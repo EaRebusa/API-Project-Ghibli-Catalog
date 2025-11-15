@@ -117,6 +117,11 @@
     animation: fadeInUp 0.5s ease-out forwards;
 }
 
+/* Style for optimistic comments while they are being saved */
+.comment-card.optimistic {
+    opacity: 0.6;
+}
+
 /* * This adds a slight delay to each card as it loads.
  * You can add more if you want a longer stagger.
  */

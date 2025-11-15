@@ -11,16 +11,16 @@ export default function FilmNavigation({ prevFilm, nextFilm }) {
     return (
         <div className="film-nav">
             {prevFilm && (
-                <div className="film-nav-card left" onClick={() => navigate(`/film/${prevFilm.id}`)}>
+                <button className="film-nav-card left" onClick={() => navigate(`/film/${prevFilm.id}`)}>
                     <img src={prevFilm.image || "https://placehold.co/80x120"} alt={prevFilm.title} />
                     <span>← {prevFilm.title}</span>
-                </div>
+                </button>
             )}
             {nextFilm && (
-                <div className="film-nav-card right" onClick={() => navigate(`/film/${nextFilm.id}`)}>
+                <button className="film-nav-card right" onClick={() => navigate(`/film/${nextFilm.id}`)}>
                     <span>{nextFilm.title} →</span>
                     <img src={nextFilm.image || "https://placehold.co/80x120"} alt={nextFilm.title} />
-                </div>
+                </button>
             )}
         </div>
     );

@@ -1,11 +1,11 @@
 import { useState, useEffect, useMemo } from 'react';
-import { getFilmById, getFilms, getComments, getLikes } from '../api';
+import { getFilmById, getFilms, getComments, getClaps } from '../api';
 
 export function useFilmData(id) {
     const [film, setFilm] = useState(null);
     const [films, setFilms] = useState([]);
     const [comments, setComments] = useState([]);
-    const [likes, setLikes] = useState(0);
+    const [claps, setClaps] = useState(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -20,13 +20,13 @@ export function useFilmData(id) {
                     getFilmById(id),
                     getFilms(),
                     getComments(id),
-                    getLikes(id)
+                    getClaps(id)
                 ]);
 
                 setFilm(single);
                 setFilms(all);
                 setComments(commentsData);
-                setLikes(likesData.likes);
+                setClaps(likesData.likes);
 
             } catch (err) {
                 console.error("Failed to fetch film details:", err);
@@ -53,11 +53,11 @@ export function useFilmData(id) {
     return {
         film,
         comments,
-        likes,
+        claps,
         loading,
         error,
         prevFilm,
         nextFilm,
-        setLikes, // We export the setter so the component can update the like count
+        setClaps, // We export the setter so the component can update the clap count
     };
 }

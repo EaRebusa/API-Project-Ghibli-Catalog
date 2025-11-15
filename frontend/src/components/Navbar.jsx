@@ -1,10 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // <-- 1. IMPORT
+import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import './Navbar.css';
 
-export default function Navbar({ theme, toggleTheme }) {
-    // 2. GET AUTH STATE AND FUNCTIONS
+export default function Navbar() {
     const { isAuthenticated, user, logout } = useAuth();
+    const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -24,7 +25,6 @@ export default function Navbar({ theme, toggleTheme }) {
                 <Link to="/home">Home</Link>
                 <Link to="/about">About</Link>
 
-                {/* --- 3. ADD CONDITIONAL LOGIC --- */}
                 {isAuthenticated ? (
                     <>
                         <span className="navbar-username">Welcome, {user.username}</span>
@@ -38,7 +38,6 @@ export default function Navbar({ theme, toggleTheme }) {
                         <Link to="/register">Register</Link>
                     </>
                 )}
-                {/* --- END CONDITIONAL LOGIC --- */}
 
                 <button className="theme-toggle" onClick={toggleTheme}>
                     {theme === 'light' ? '🌙 Dark' : '☀️ Light'}

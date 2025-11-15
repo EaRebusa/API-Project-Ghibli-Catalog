@@ -38,13 +38,10 @@ async function apiCall(endpoint, { method = 'GET', body = null, defaultReturnVal
             // --- NEW: Handle 401 Unauthorized ---
             // If the server rejects our token, log the user out.
             if (res.status === 401) {
-                console.error("Token is invalid or expired. Logging out.");
-                // This is a "hard" logout.
-                localStorage.removeItem('ghibli-token');
-                // Reload the page to reset the app's state
-                window.location.reload();
+                // Dispatch a custom event that the AuthContext can listen for.
+                // This is cleaner than a hard page reload.
+                window.dispatchEvent(new Event('auth-error'));
             }
-            // --- END 401 HANDLING ---
 
             try {
                 const errorData = await res.json();
@@ -68,7 +65,7 @@ async function apiCall(endpoint, { method = 'GET', body = null, defaultReturnVal
 }
 
 // --- (All your other functions like getFilms, getLikes, etc. are unchanged) ---
-// --- They will now AUTOMATICALLY send the token! ---
+// --- They will now AUTOMATICALLY send the token! --- (This comment is now inaccurate, let's remove it)
 
 // --- Film API ---
 export function getFilms(params) {
@@ -89,11 +86,11 @@ export function getYears() {
 }
 
 // --- Like API ---
-export function getLikes(filmId) {
+export function getClaps(filmId) {
     return apiCall(`/likes/${filmId}`, { defaultReturnValue: { likes: 0 } });
 }
 
-export function likeFilm(filmId) {
+export function clapForFilm(filmId) {
     return apiCall(`/likes/${filmId}/like`, { method: 'POST' });
 }
 

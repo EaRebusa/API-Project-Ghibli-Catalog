@@ -1,11 +1,13 @@
-import { useEffect, useState, useMemo } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FourSquare } from "react-loading-indicators";
 import { useAuth } from "../context/AuthContext";
 import Modal from "../components/Modal";
 import CommentSection from "../components/CommentSection";
 import FilmNavigation from "../components/FilmNavigation";
-import { getFilmById, getFilms, getComments, likeFilm, getLikes } from "../api";
+import { useFilmData } from "../hooks/useFilmData"; // <-- Import the new hook
+import { clapForFilm } from '../api';
+import { toast } from 'react-hot-toast';
 import "./FilmDetails.css";
 
 const BG_VIDEO = "/banner.mp4";
@@ -16,71 +18,39 @@ export default function FilmDetails() {
     const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
 
-    const [film, setFilm] = useState(null);
-    const [films, setFilms] = useState([]);
-    const [comments, setComments] = useState([]);
-    const [likes, setLikes] = useState(0);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    // All data fetching and state management is now handled by our custom hook!
+    const {
+        film,
+        comments, // from useFilmData
+        claps,    // from useFilmData
+        loading,
+        error,
+        prevFilm,
+        nextFilm,
+        setClaps, // from useFilmData
+    } = useFilmData(id);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showRomanized, setShowRomanized] = useState(false);
     const [videoError, setVideoError] = useState(false);
-    const [isLiking, setIsLiking] = useState(false);
+    const [isClapping, setIsClapping] = useState(false);
 
-    // Memoize finding the next/prev films to avoid re-calculating on every render
-    const { prevFilm, nextFilm } = useMemo(() => {
-        if (!film || films.length === 0) return { prevFilm: null, nextFilm: null };
-        const index = films.findIndex((f) => f.id === film.id);
-        if (index === -1) return { prevFilm: null, nextFilm: null };
-        const prev = index > 0 ? films[index - 1] : null;
-        const next = index < films.length - 1 ? films[index + 1] : null;
-        return { prevFilm: prev, nextFilm: next };
-    }, [film, films]);
-
-    useEffect(() => {
-        const fetchFilmData = async () => {
-            try {
-                setLoading(true);
-                setError(null);
-                // Fetch all data in parallel
-                const [single, all, commentsData, likesData] = await Promise.all([
-                    getFilmById(id),
-                    getFilms(),
-                    getComments(id),
-                    getLikes(id)
-                ]);
-                setFilm(single);
-                setFilms(all);
-                setComments(commentsData);
-                setLikes(likesData.likes);
-            } catch (err) {
-                console.error("Failed to fetch film details:", err);
-                setError("Could not load film data. Please try again later.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchFilmData();
-    }, [id]);
-
-    const handleLike = async () => {
+    const handleClap = async () => {
         if (!isAuthenticated) {
-            alert("Please log in to like a film.");
+            toast.error("Please log in to clap for films.");
             return;
         }
-        setIsLiking(true);
+        setIsClapping(true);
         try {
-            const updatedLikes = await likeFilm(id);
-            if (updatedLikes) {
-                setLikes(updatedLikes.likes);
+            const updatedClaps = await clapForFilm(id);
+            if (updatedClaps) {
+                setClaps(updatedClaps.likes); // The backend still calls it 'likes'
             }
         } catch (error) {
             console.error("Failed to like film:", error);
-            alert("Failed to like the film. Please try again.");
+            toast.error("Failed to like the film. Please try again.");
         } finally {
-            setIsLiking(false);
+            setIsClapping(false);
         }
     };
 
@@ -141,29 +111,31 @@ export default function FilmDetails() {
                     <div className="film-info">
                         <h1>{film.title} <span className="year">({film.release_date})</span></h1>
 
-                        <h3
-                            className="japanese-title"
-                            onMouseEnter={() => setShowRomanized(true)}
-                            onMouseLeave={() => setShowRomanized(false)}
-                            onClick={() => setShowRomanized((prev) => !prev)}
-                        >
-                            <span className={`fade-text ${showRomanized ? "hidden" : "visible"}`}>
-                                {film.original_title}
-                            </span>
-                            <span className={`fade-text ${showRomanized ? "visible" : "hidden"}`}>
-                                {film.original_title_romanised}
-                            </span>
-                        </h3>
+                        <div className="japanese-title-container">
+                            <button
+                                className="japanese-title-toggle"
+                                onMouseEnter={() => setShowRomanized(true)}
+                                onMouseLeave={() => setShowRomanized(false)}
+                                onClick={() => setShowRomanized((prev) => !prev)}
+                            >
+                                <span className={`fade-text ${showRomanized ? "hidden" : "visible"}`}>
+                                    {film.original_title}
+                                </span>
+                                <span className={`fade-text ${showRomanized ? "visible" : "hidden"}`}>
+                                    {film.original_title_romanised}
+                                </span>
+                            </button>
+                        </div>
 
                         <p><strong>Director:</strong> {film.director}</p>
                         <p><strong>Producer:</strong> {film.producer}</p>
                         <p><strong>Running Time:</strong> {film.running_time} min</p>
                         <p><strong>🍅 Rotten Tomatoes:</strong> {film.rt_score}</p>
                         <div className="like-section">
-                            <button onClick={handleLike} className="like-button" disabled={isLiking || !isAuthenticated} title={!isAuthenticated ? "Log in to like films" : ""}>
-                                ❤️ Like
+                            <button onClick={handleClap} className="like-button" disabled={isClapping || !isAuthenticated} title={!isAuthenticated ? "Log in to clap for films" : ""}>
+                                👏 Clap
                             </button>
-                            <span>{likes} likes</span>
+                            <span>{claps} claps</span>
                         </div>
                     </div>
                 </div>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { postComment } from '../api';
 import './CommentSection.css';
+import { toast } from 'react-hot-toast';
 
 export default function CommentSection({ filmId, initialComments = [] }) {
     const { isAuthenticated, user } = useAuth();
@@ -9,7 +10,6 @@ export default function CommentSection({ filmId, initialComments = [] }) {
     const [commentText, setCommentText] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Use the logged-in user's name, or allow anonymous input
     const authorName = isAuthenticated ? user.username : 'Anonymous';
 
     const handleSubmit = async (e) => {
@@ -17,30 +17,45 @@ export default function CommentSection({ filmId, initialComments = [] }) {
         if (!commentText.trim()) return;
 
         setIsSubmitting(true);
-        const newCommentData = {
-            // author is now handled by the backend via token
+
+        // --- Optimistic UI ---
+        // 1. Create a temporary comment object to show in the UI immediately.
+        const tempId = `temp-${Date.now()}`;
+        const optimisticComment = {
+            _id: tempId,
             comment: commentText,
+            author: { username: authorName },
+            createdAt: new Date().toISOString(),
+            isOptimistic: true, // A flag for styling
         };
 
+        // 2. Add the optimistic comment to the state and clear the input.
+        setComments(prevComments => [optimisticComment, ...prevComments]);
+        setCommentText('');
+
         try {
-            const savedComment = await postComment(filmId, newCommentData);
+            // 3. Send the actual request to the server.
+            const savedComment = await postComment(filmId, { comment: optimisticComment.comment });
+
             if (savedComment) {
-                // The backend should return the comment with the author's name populated
-                setComments(prevComments => [savedComment, ...prevComments]);
-                setCommentText('');
+                // 4. If successful, replace the temporary comment with the real one from the server.
+                setComments(prevComments =>
+                    prevComments.map(c => (c._id === tempId ? savedComment : c))
+                );
             } else {
                 throw new Error("API did not return the saved comment.");
             }
         } catch (error) {
             console.error("Failed to submit comment:", error);
-            alert("Failed to submit comment. Please try again.");
+            toast.error("Could not post comment. Please try again.");
+            // 5. If the API call fails, remove the optimistic comment from the list.
+            setComments(prevComments => prevComments.filter(c => c._id !== tempId));
         } finally {
             setIsSubmitting(false);
         }
     };
 
     const handleKeyDown = (e) => {
-        // Submit form on Enter, but allow new lines with Shift+Enter
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault(); // Prevents adding a new line
             handleSubmit(e); // Manually trigger the submit handler
@@ -50,8 +65,6 @@ export default function CommentSection({ filmId, initialComments = [] }) {
     return (
         <div className="comments-section">
             <h2>Comments ({comments.length})</h2>
-            
-            {/* The form is now always visible */}
             <form className="comment-form" onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="comment">Posting as {authorName}</label>
@@ -71,7 +84,7 @@ export default function CommentSection({ filmId, initialComments = [] }) {
 
             <div className="comment-list">
                 {comments.map((comment) => (
-                    <div key={comment._id} className="comment-card">
+                    <div key={comment._id} className={`comment-card ${comment.isOptimistic ? 'optimistic' : ''}`}>
                         <div className="comment-header">
                             <strong>{comment.author?.username || 'Anonymous'}</strong>
                             <span className="comment-date">{new Date(comment.createdAt).toLocaleString()}</span>

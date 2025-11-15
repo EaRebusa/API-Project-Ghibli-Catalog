@@ -1,20 +1,17 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer"; // <-- 1. IMPORT FOOTER
+import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import FilmDetails from "./pages/FilmDetails";
 import About from "./pages/About";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import { useState } from "react";
 import ClickSpark from "./components/ClickSpark";
+import { useTheme } from "./context/ThemeContext";
+import { Toaster } from "react-hot-toast";
 
 function App() {
-    const [theme, setTheme] = useState("light");
-
-    const toggleTheme = () => {
-        setTheme((prev) => (prev === "light" ? "dark" : "light"));
-    };
+    const { theme } = useTheme();
 
     // Theme palettes
     const sparkColors = {
@@ -30,26 +27,22 @@ function App() {
             sparkCount={10}
             duration={500}
         >
-            {/* 2. ADD A WRAPPER FOR FLEX LAYOUT */}
             <div className={`app-container ${theme}`}>
+                <Toaster position="bottom-right" toastOptions={{ duration: 4000 }} />
                 <Router>
-                    <Navbar toggleTheme={toggleTheme} theme={theme} />
-                    {/* 3. WRAP ROUTES IN A <main> TAG */}
+                    <Navbar />
                     <main className="main-content">
                         <div className="container">
                             <Routes>
-                                {/* --- MODIFIED: Redirect root path to /about --- */}
                                 <Route path="/" element={<Navigate to="/about" replace />} />
                                 <Route path="/home" element={<Home />} />
                                 <Route path="/film/:id" element={<FilmDetails />} />
                                 <Route path="/about" element={<About />} />
-                                {/* --- ADDED: New Auth Routes --- */}
                                 <Route path="/register" element={<Register />} />
                                 <Route path="/login" element={<Login />} />
                             </Routes>
                         </div>
                     </main>
-                    {/* 4. ADD THE FOOTER */}
                     <Footer />
                 </Router>
             </div>
