@@ -177,3 +177,50 @@
         transform: translateY(0);
     }
 }
+
+.comment-pagination-controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.load-more-button {
+    display: block;
+    /* width: fit-content; */
+    /* margin: 2rem auto 0; */
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    background-color: transparent;
+    border: 2px solid var(--primary-color);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.load-more-button:hover:not(:disabled) {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.load-more-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.show-less-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--text-color-subtle);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.show-less-button:hover:not(:disabled) {
+    color: var(--primary-color);
+}

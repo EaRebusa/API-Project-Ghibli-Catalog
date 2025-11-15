@@ -14,7 +14,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: 0; 
+  z-index: 0;
 }
 
 .about-overlay {
@@ -45,12 +45,12 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 2rem;
-  min-height: 86vh; 
+  min-height: 86vh;
   opacity: 0;
   animation: fadeIn 0.6s forwards;
   position: relative;
   z-index: 2;
-  animation-delay: 3.8s; 
+  animation-delay: 3.8s;
 }
 
 @keyframes fadeIn {
@@ -70,7 +70,7 @@
   flex-wrap: wrap;
   gap: 2rem;
   margin-top: 2rem;
-  background-color: rgba(255, 255, 255, 0.8); 
+  background-color: var(--card-bg); /* Use the solid card background color */
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -93,16 +93,16 @@
   transform: scale(1.03);
 }
 
-/* Dark mode logo inversion */
+/* Invert logo color ONLY in dark mode */
 .dark .about-image img,
 .dark .modal img {
-  filter: invert(1) brightness(1.2);
+    filter: invert(1) brightness(1.2);
 }
 
 
 @media (max-width: 768px) {
   .about-card {
-    flex-direction: column; 
+    flex-direction: column;
     align-items: center;
   }
 
@@ -113,19 +113,14 @@
 
 .about-text {
   flex: 1;
-  color: #000000; 
+  /* Make the text theme-aware to be readable on the solid card background */
+  color: var(--text-color);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  text-shadow: #000000 0px 0px 1.5px;
 }
 
 .about-text p {
   margin-bottom: 1rem;
   line-height: 1.6;
-}
-
-.dark .about-card {
-  background-color: rgba(44, 44, 62, 0.85); 
-  box-shadow: 0 4px 12px rgba(255,255,255,0.05);
 }
 
 
@@ -145,12 +140,6 @@
   line-height: 1.6;
   text-shadow: #000000 0px 0px 1.5px;
 }
-
-.dark .about-text p {
-  color: #f0f0f0;
-  text-shadow: #ffffff 0px 0px 1.5px;
-}
-
 
 .loading-container {
   display: flex;

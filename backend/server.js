@@ -16,8 +16,9 @@ const PORT = process.env.PORT || 5000;
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
-        console.log("MongoDB connected successfully. (Local)");
-        seedDatabase();
+        console.log("MongoDB connected successfully.");
+        // Seeding is now a manual process.
+        // Run `npm run seed` from the backend directory to populate the database.
     })
     .catch(err => console.error("MongoDB connection error:", err));
 

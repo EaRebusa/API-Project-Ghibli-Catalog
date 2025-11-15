@@ -64,8 +64,8 @@
   padding: 1.5rem;
   border-radius: 12px;
   backdrop-filter: blur(4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  transition: background 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--glow-shadow, 0 0 0 transparent), 0 4px 12px var(--card-shadow);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
   width: inherit;
 }
 
@@ -120,7 +120,7 @@
   margin: 0;
   font-family: inherit;
   font-size: 1.2rem;
-  color: var(--accent, #5A4E9D);
+  color: var(--primary-color);
   text-shadow: #4a4a64 0.3px 0.3px 0.3px;
 }
 
@@ -163,7 +163,7 @@
 .film-description h2 {
   margin-top: 0;
   font-size: 1.8rem;
-  border-bottom: 2px solid var(--accent, #3d356b);
+  border-bottom: 2px solid var(--primary-color);
   padding-bottom: 0.3rem;
   text-shadow: #4a4a64 1px 1px 2px;
 }

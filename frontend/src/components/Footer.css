@@ -1,15 +1,27 @@
 .footer {
-    background-color: var(--bg-color);
-    color: var(--text-color);
+    /* Make the background transparent */
+    background-color: transparent;
+    color: var(--text-color); /* Default to theme-aware color */
     padding: 20px 40px;
     text-align: center;
-    border-top: 1px solid var(--card-shadow);
     margin-top: auto; /* Pushes footer to the bottom in a flex container */
     width: 100%;
     box-sizing: border-box;
     position: relative; /* Required for z-index to take effect */
     z-index: 10; /* Ensures footer is above the About page's fixed overlay */
-    transition: background 0.3s ease, color 0.3s ease;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* --- NEW: Aesthetic Gradient Border --- */
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--primary-color, #7b68ee), transparent);
+    opacity: 0.3;
 }
 
 .footer-content p {
@@ -18,7 +30,14 @@
 }
 
 .footer-content a {
-    color: var(--text-color);
+    color: var(--text-color); /* Default to theme-aware color */
     font-weight: 500;
     text-decoration: underline;
+}
+
+/* Special style for the footer ONLY on the About page */
+.footer.on-about-page,
+.footer.on-about-page a {
+  color: #ffffff; /* Force text to be white */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4); /* Add shadow for readability */
 }

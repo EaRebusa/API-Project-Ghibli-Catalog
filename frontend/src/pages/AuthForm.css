@@ -1,11 +1,22 @@
+/* --- UPDATED --- */
 .auth-container {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 40px;
-    min-height: 80vh;
+
+    /* We want it to take up the full screen, minus the navbar (approx 60px) */
+    min-height: calc(100vh - 60px);
+    box-sizing: border-box; /* Include padding in the height */
+
+    background-size: cover;
+    background-position: center;
+
+    /* --- NEW: Fade-in animation --- */
+    animation: fadeIn 0.5s ease-out;
 }
 
+/* --- UPDATED --- */
 .auth-form {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
@@ -14,6 +25,24 @@
     width: 100%;
     max-width: 400px;
     box-shadow: 0 4px 12px var(--card-shadow);
+
+    /* --- NEW: Subtle hover effect --- */
+    transition: all 0.3s ease;
+}
+
+.auth-form:hover {
+    box-shadow: 0 6px 20px var(--card-shadow);
+    transform: translateY(-2px);
+}
+
+/* --- NEW: Logo Style --- */
+.auth-logo {
+    display: block;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 1rem;
+    /* This will make it blend with light/dark mode using our new variable */
+    filter: var(--logo-filter);
 }
 
 .auth-form h2 {
@@ -23,6 +52,7 @@
     color: var(--text-color);
 }
 
+/* ... (rest of your CSS is unchanged) ... */
 .form-group {
     display: flex;
     flex-direction: column;
@@ -86,4 +116,14 @@
     color: var(--primary-color);
     text-decoration: none;
     font-weight: bold;
+}
+
+/* --- NEW: Fade-in Animation --- */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }

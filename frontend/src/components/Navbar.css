@@ -6,7 +6,7 @@
   background-color: var(--card-bg);
   color: var(--text-color);
   box-shadow: 0 2px 6px var(--card-shadow);
-  transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -20,7 +20,7 @@
 }
 
 .navbar a:hover {
-  color: #7b68ee;
+  color: var(--primary-color);
 }
 
 .navbar-left .logo {
@@ -31,6 +31,41 @@
 .navbar-right {
   display: flex;
   align-items: center;
+}
+
+.navbar-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: 1rem; /* This was missing a semicolon */
+  padding-left: 1rem;
+  border-left: 1px solid var(--border-color, #ddd);
+}
+
+.navbar-username {
+  font-size: 0.9rem;
+  color: var(--text-color-subtle);
+  font-weight: 500;
+}
+
+.navbar-button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s, filter 0.2s;
+}
+
+.navbar-button:hover {
+  filter: brightness(1.1);
+}
+
+.navbar-button:active {
+  transform: scale(0.97);
 }
 
 .theme-toggle {
@@ -48,4 +83,56 @@
 .theme-toggle:hover {
   transform: translateY(-2px);
   background: var(--card-bg);
+}
+
+/* --- NEW: Logout Modal Styles --- */
+.logout-modal-content {
+  padding: 1rem;
+  text-align: center;
+  color: var(--text-color);
+  /* --- FIX: Make the modal look like a card --- */
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px var(--card-shadow);
+}
+
+.logout-modal-content h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.logout-modal-content p {
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+.logout-modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.modal-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal-button.cancel {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+.modal-button.confirm {
+  background-color: #e53e3e; /* A distinct red for confirmation */
+  color: white;
+}
+
+.modal-button:hover {
+  filter: brightness(1.1);
 }

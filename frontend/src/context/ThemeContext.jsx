@@ -15,8 +15,8 @@ export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(getInitialTheme);
 
   useEffect(() => {
-    // We'll set the theme class on the root app container
-    // This is consistent with how App.jsx is structured
+    // Apply the theme class directly to the body for global effect
+    document.body.className = theme;
   }, [theme]);
 
   const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");

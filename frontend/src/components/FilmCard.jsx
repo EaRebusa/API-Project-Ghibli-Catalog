@@ -38,13 +38,18 @@ export default function FilmCard({ film, style }) {
     };
 
     return (
-        <GlareHover glareOpacity={0.15} glareSize={400} glareAngle={-25} transitionDuration={900}>
+        <GlareHover className="film-card-wrapper" glareOpacity={0.15} glareSize={400} glareAngle={-25} transitionDuration={900}>
             <div
                 className="film-card fade-in"
                 style={style}
                 onClick={() => navigate(`/film/${film.id}`)}
             >
                 <img src={film.image || "https://placehold.co/200x300"} alt={film.title} />
+
+                {/* --- NEW: Score Overlay --- */}
+                <div className="film-score-overlay">
+                    <span>🍅 {film.rt_score}</span>
+                </div>
 
                 <div className="film-card-content">
                     <h3 dangerouslySetInnerHTML={{ __html: film.highlightedTitle }} />

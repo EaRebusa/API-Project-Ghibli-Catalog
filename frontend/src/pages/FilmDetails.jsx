@@ -27,7 +27,13 @@ export default function FilmDetails() {
         error,
         prevFilm,
         nextFilm,
+        setComments, // from useFilmData
         setClaps, // from useFilmData
+        commentPage,
+        resetComments,
+        loadMoreComments,
+        hasMoreComments,
+        isFetchingMore,
     } = useFilmData(id);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -146,7 +152,16 @@ export default function FilmDetails() {
                 <p>{film.description}</p>
             </div>
 
-            <CommentSection filmId={id} initialComments={comments} />
+            <CommentSection
+                filmId={id}
+                comments={comments}
+                setComments={setComments}
+                loadMoreComments={loadMoreComments}
+                commentPage={commentPage}
+                resetComments={resetComments}
+                hasMore={hasMoreComments}
+                isFetchingMore={isFetchingMore}
+            />
 
             <FilmNavigation prevFilm={prevFilm} nextFilm={nextFilm} />
         </div>

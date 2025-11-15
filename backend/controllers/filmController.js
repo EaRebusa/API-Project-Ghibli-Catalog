@@ -3,30 +3,40 @@ import Film from '../models/Film.js';
 // Get all films
 export const getFilms = async (req, res) => {
     try {
-        const { search, sort, director, year, order = 'asc' } = req.query;
+        const { search, sort, director, year, order = 'asc' } = req.query; // Default order to 'asc'
 
-        // 1. Build the filter query object for Mongoose
-        const filterQuery = {};
+        // 1. Build the initial filtering stage for the aggregation pipeline
+        const matchStage = {};
         if (search) {
             // Use a case-insensitive regex for searching the title
-            filterQuery.title = { $regex: search, $options: 'i' };
+            matchStage.title = { $regex: search, $options: 'i' };
         }
         if (director) {
-            filterQuery.director = director;
+            matchStage.director = director;
         }
         if (year) {
-            filterQuery.release_date = year;
+            matchStage.release_date = year;
         }
 
-        // 2. Build the sort object for Mongoose
-        // Default sort by release date if no sort param is given
-        const sortKey = sort || 'release_date';
-        // Mongoose sort order is 1 for 'asc' and -1 for 'desc'
-        const sortOrder = order === 'desc' ? -1 : 1;
-        const sortQuery = { [sortKey]: sortOrder };
+        // Start building the pipeline
+        const pipeline = [{ $match: matchStage }];
 
-        // 3. Execute the query with filters and sorting
-        const films = await Film.find(filterQuery).sort(sortQuery);
+        const sortOrder = order === 'desc' ? -1 : 1;
+
+        // --- FIX: Numeric Sorting for rt_score ---
+        if (sort === 'rt_score') {
+            // If sorting by score, we must convert the string to an integer first.
+            pipeline.push(
+                { $addFields: { numeric_rt_score: { $toInt: "$rt_score" } } },
+                { $sort: { numeric_rt_score: sortOrder } }
+            );
+        } else if (sort) {
+            // For other fields (like release_date), use a normal sort stage.
+            pipeline.push({ $sort: { [sort]: sortOrder } });
+        }
+
+        // Execute the aggregation pipeline
+        const films = await Film.aggregate(pipeline);
         res.json(films);
     } catch (error) {
         res.status(500).json({ message: 'Failed to fetch films', error });

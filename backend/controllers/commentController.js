@@ -4,11 +4,27 @@ import asyncHandler from 'express-async-handler';
 // Wrap controller functions with asyncHandler to catch errors
 export const getComments = asyncHandler(async (req, res) => {
     const { filmId } = req.params;
-    // Populate the 'author' field, selecting only the 'username'
-    const comments = await Comment.find({ filmId: filmId })
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10; // Default to 10 comments per page
+    const skip = (page - 1) * limit;
+
+    // Get the total count of comments for this film to calculate total pages
+    const totalComments = await Comment.countDocuments({ filmId });
+
+    // Fetch the paginated comments
+    const comments = await Comment.find({ filmId })
         .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
         .populate('author', 'username');
-    res.status(200).json(comments);
+
+    // Return comments along with pagination metadata
+    res.status(200).json({
+        comments,
+        totalPages: Math.ceil(totalComments / limit),
+        currentPage: page,
+        hasMore: skip + comments.length < totalComments,
+    });
 });
 
 export const postComment = asyncHandler(async (req, res) => {

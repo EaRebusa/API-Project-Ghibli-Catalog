@@ -1,7 +1,64 @@
 .home-container {
+  /* This ensures the container uses the theme's background color and transitions smoothly */
+  background-color: var(--bg-color);
+  transition: background-color 0.3s ease;
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
+}
+
+.home-banner {
+  position: relative;
+  height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border-radius: 12px;
+  overflow: hidden;
+  color: white;
+  text-align: center;
+  background-image: url('../assets/banner.jpg');
+  background-size: cover;
+  background-position: center 30%; /* Initial position */
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+/* Add a dark overlay for text readability */
+.home-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.home-banner:hover {
+  transform: scale(1.02);
+}
+
+.banner-content {
+  position: relative;
+  z-index: 2;
+}
+
+.banner-content h1 {
+  font-size: 3rem;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.banner-content h2 {
+  font-size: 1.2rem;
+  font-weight: 400;
+  max-width: 600px;
+  margin: 0.5rem auto 0;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 
 .controls {
@@ -43,11 +100,6 @@
   overflow: hidden;
   background-color: var(--card-bg);
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
-.film-card:hover {
-  transform: translateY(-4px) scale(1.03);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
 }
 
 @keyframes fadeSlideUp {
